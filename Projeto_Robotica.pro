@@ -15,11 +15,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    serialport.cpp
+    serialport.cpp \
+    video.cpp
 
 HEADERS  += mainwindow.h \
     serialport.h \
-    serialport.h
+    serialport.h \
+    video.h
 
 FORMS    += mainwindow.ui \
     serialport.ui
