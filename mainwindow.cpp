@@ -33,16 +33,31 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QMessageBox>
-#include <qDebug>
-
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+    timer = new QTimer(this);
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateStatus()));
+
+    labelUsoMemoria = new QLabel(this);
+    labelTotalMemoria = new QLabel(this);
+    labelMemoriaProcesso = new QLabel(this);
+    labelTotal = new QLabel("Uso Total: ", this);
+    labelUso = new QLabel("Uso Atual: ", this);
+    labelProcesso = new QLabel("Uso Processo: ", this);
+
+    ui->statusBar->addPermanentWidget(labelTotal);
+        ui->statusBar->addPermanentWidget(labelTotalMemoria);
+    ui->statusBar->addPermanentWidget(labelUso);
+        ui->statusBar->addPermanentWidget(labelUsoMemoria);
+    ui->statusBar->addPermanentWidget(labelProcesso);
+        ui->statusBar->addPermanentWidget(labelMemoriaProcesso);
+
+    timer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -81,4 +96,50 @@ void MainWindow::on_actionListar_Portas_triggered()
 void MainWindow::on_actionTestar_Conexao_triggered()
 {
 
+}
+
+DWORDLONG MainWindow::getTotalMemory()
+{
+    MEMORYSTATUSEX memInfo;
+    memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+    GlobalMemoryStatusEx(&memInfo);
+    DWORDLONG totalVirtualMem = memInfo.ullTotalPageFile;
+
+    return totalVirtualMem;
+}
+
+DWORDLONG MainWindow::getMemoryUsage()
+{
+    MEMORYSTATUSEX memInfo;
+    memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+    GlobalMemoryStatusEx(&memInfo);
+    DWORDLONG virtualMemUsed = memInfo.ullTotalPageFile - memInfo.ullAvailPageFile;
+
+    return virtualMemUsed;
+}
+
+SIZE_T MainWindow::getMemoryUsageProcess()
+{
+    PROCESS_MEMORY_COUNTERS pmc;
+
+    GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+    SIZE_T virtualMemUsedByMe = pmc.WorkingSetSize;
+
+    return virtualMemUsedByMe;
+}
+
+void MainWindow::updateStatus()
+{
+    totalMemoria = getTotalMemory();
+    usoMemoria = getMemoryUsage();
+    memoriaProcesso = getMemoryUsageProcess();
+
+    double pctUso = usoMemoria * 100 / totalMemoria;
+    double pctProcesso = memoriaProcesso * 100 / totalMemoria;
+
+    labelTotalMemoria->setText(QString::number(totalMemoria) );
+    labelUsoMemoria->setText(QString::number(pctUso) + "%");
+    labelMemoriaProcesso->setText(QString::number(pctProcesso) + "%");
+
+    ui->statusBar->update();
 }

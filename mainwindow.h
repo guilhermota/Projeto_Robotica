@@ -34,7 +34,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 #include "serialport.h"
+#include "Windows.h"
+#include "Psapi.h"
+#include <QMessageBox>
+#include <qDebug>
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -57,9 +63,23 @@ private slots:
 
     void on_actionTestar_Conexao_triggered();
 
+    void updateStatus();
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;
+
+    DWORDLONG getTotalMemory();
+    DWORDLONG getMemoryUsage();
+    SIZE_T getMemoryUsageProcess();
+
+    DWORDLONG totalMemoria;
+    DWORDLONG usoMemoria;
+    DWORDLONG memoriaProcesso;
+
+    QTimer *timer;
+
+    QLabel *labelUsoMemoria, *labelTotalMemoria, *labelMemoriaProcesso, *labelUso, *labelTotal, *labelProcesso;
 };
 
 #endif // MAINWINDOW_H
