@@ -37,12 +37,15 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
     ui->setupUi(this);
+
+    //timer update janela principal
     timer = new QTimer(this);
 
+    //conexoes signal slot
     connect(timer, SIGNAL(timeout()), this, SLOT(updateStatus()));
 
+    //criacoes das labels na janela principal
     labelUsoMemoria = new QLabel(this);
     labelTotalMemoria = new QLabel(this);
     labelMemoriaProcesso = new QLabel(this);
@@ -54,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     labelCpuUso = new QLabel("Uso CPU: ", this);
     labelCpuProcesso = new QLabel("Processo CPU: ", this);
 
+    //adicionando labels na status bar
     ui->statusBar->addPermanentWidget(labelCpuUso);
         ui->statusBar->addPermanentWidget(labelUsoCpu);
     ui->statusBar->addPermanentWidget(labelCpuProcesso);
@@ -65,8 +69,12 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->statusBar->addPermanentWidget(labelUsoMemoria);
     ui->statusBar->addPermanentWidget(labelProcesso);
         ui->statusBar->addPermanentWidget(labelMemoriaProcesso);
+
+    //inicializa variaveis para uso de memoria e cpu
     init();
+    //inicia a janela ja com uso de memoria e cpu
     updateStatus();
+    //inicia timer update janela principal
     timer->start(1000);
 }
 
@@ -77,6 +85,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionSair_triggered()
 {
+    //mensagem ara confirmar a saida
     QMessageBox msgBox;
     msgBox.setText("Sair");
     msgBox.setInformativeText("Voce tem certeza que quer sair?");
@@ -108,6 +117,13 @@ void MainWindow::on_actionTestar_Conexao_triggered()
 
 }
 
+/**
+ * @brief MainWindow::getTotalMemory
+ *
+ * Retorna valor total de memoria virtual.
+ *
+ * @return Memoria virtual total
+ */
 DWORDLONG MainWindow::getTotalMemory()
 {
     MEMORYSTATUSEX memInfo;
@@ -118,6 +134,13 @@ DWORDLONG MainWindow::getTotalMemory()
     return totalVirtualMem;
 }
 
+/**
+ * @brief MainWindow::getMemoryUsage
+ *
+ * Retorna uso total da memoria virtual.
+ *
+ * @return Uso total da memoria virtual
+ */
 DWORDLONG MainWindow::getMemoryUsage()
 {
     MEMORYSTATUSEX memInfo;
@@ -128,6 +151,13 @@ DWORDLONG MainWindow::getMemoryUsage()
     return virtualMemUsed;
 }
 
+/**
+ * @brief MainWindow::getMemoryUsageProcess
+ *
+ * Retorna memoria sendo utiliada por este programa.
+ *
+ * @return Memoria usada por este programa
+ */
 SIZE_T MainWindow::getMemoryUsageProcess()
 {
     PROCESS_MEMORY_COUNTERS pmc;
@@ -138,6 +168,15 @@ SIZE_T MainWindow::getMemoryUsageProcess()
     return virtualMemUsedByMe;
 }
 
+/**
+ * @brief MainWindow::init
+ *
+ * Esta funcao inicializa as variaveis necessarias para
+ * pegar o uso da CPU.
+ *
+ * @see MainWindow::getUsoCpu()
+ * @see MainWindow::getCpuProcesso()
+ */
 void MainWindow::init()
 {
     GetSystemInfo(&sysInfo);
@@ -156,6 +195,14 @@ void MainWindow::init()
     PdhCollectQueryData(cpuQuery);*/
 }
 
+
+/**
+ * @brief MainWindow::getUsoCpu
+ *
+ * Esta funcao retorna o uso atual da CPU.
+ *
+ * @return Uso total atual da CPU.
+ */
 double MainWindow::getUsoCpu()
 {
    /* PDH_FMT_COUNTERVALUE counterVal;
@@ -166,6 +213,13 @@ double MainWindow::getUsoCpu()
     return 100;
 }
 
+/**
+ * @brief MainWindow::getCpuProcesso
+ *
+ * Esta funcao retorna o uso de CPU por este programa.
+ *
+ * @return Uso da CPU por este processo
+ */
 double MainWindow::getCpuProcesso()
 {
     GetSystemTimeAsFileTime(&ftime);
@@ -184,6 +238,12 @@ double MainWindow::getCpuProcesso()
     return percent * 100;
 }
 
+
+/**
+ * @brief MainWindow::updateStatus
+ *
+ * Esta funcao atualiza os valores sendo mostrados na janela princiapal.
+ */
 void MainWindow::updateStatus()
 {
     totalMemoria = getTotalMemory();
@@ -202,4 +262,9 @@ void MainWindow::updateStatus()
     labelProcessoCpu->setText(QString::number(processoCpu) + "%");
 
     ui->statusBar->update();
+}
+
+void MainWindow::on_actionSobre_triggered()
+{
+
 }

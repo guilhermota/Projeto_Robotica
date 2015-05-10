@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/img">
+        <file alias="logo_provisoria">logo_provisoria.jpg</file>
+    </qresource>
+</RCC>

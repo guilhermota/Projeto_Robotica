@@ -35,12 +35,16 @@
 
 #include <QMainWindow>
 #include <QTimer>
-#include "serialport.h"
-#include "Windows.h"
-#include "Psapi.h"
 #include <QMessageBox>
 #include <qDebug>
 #include <QLabel>
+
+#include "serialport.h"
+
+#include "Windows.h"
+#include "Psapi.h"
+#include "tchar.h"
+#include "Pdh.h"
 
 namespace Ui {
 class MainWindow;
@@ -65,6 +69,8 @@ private slots:
 
     void updateStatus();
 
+    void on_actionSobre_triggered();
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;
@@ -72,14 +78,30 @@ private:
     DWORDLONG getTotalMemory();
     DWORDLONG getMemoryUsage();
     SIZE_T getMemoryUsageProcess();
+    double getUsoCpu();
+    double getCpuProcesso();
+    void init();
+
+    ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
+    int numProcessors;
+    HANDLE self;
+    SYSTEM_INFO sysInfo;
+    FILETIME ftime, fsys, fuser;
+    ULARGE_INTEGER now, sys, user;
+    double percent;
+    /*PDH_HQUERY cpuQuery;
+    PDH_HCOUNTER cpuTotal;*/
 
     DWORDLONG totalMemoria;
     DWORDLONG usoMemoria;
-    DWORDLONG memoriaProcesso;
+    SIZE_T memoriaProcesso;
+    double usoCpu;
+    double processoCpu;
 
     QTimer *timer;
 
-    QLabel *labelUsoMemoria, *labelTotalMemoria, *labelMemoriaProcesso, *labelUso, *labelTotal, *labelProcesso;
+    QLabel *labelUsoCpu, *labelCpuProcesso, *labelUsoMemoria, *labelTotalMemoria, *labelMemoriaProcesso,
+            *labelCpuUso, *labelProcessoCpu, *labelUso, *labelTotal, *labelProcesso;
 };
 
 #endif // MAINWINDOW_H

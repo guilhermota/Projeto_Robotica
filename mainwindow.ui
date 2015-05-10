@@ -44,8 +44,15 @@
     <addaction name="separator"/>
     <addaction name="menuPorta"/>
    </widget>
+   <widget class="QMenu" name="menuAjuda">
+    <property name="title">
+     <string>Ajuda</string>
+    </property>
+    <addaction name="actionSobre"/>
+   </widget>
    <addaction name="menuArquivo"/>
    <addaction name="menuFerramentas"/>
+   <addaction name="menuAjuda"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -74,6 +81,11 @@
   <action name="actionTestar_Conexao">
    <property name="text">
     <string>Testar Conexao</string>
+   </property>
+  </action>
+  <action name="actionSobre">
+   <property name="text">
+    <string>Sobre</string>
    </property>
   </action>
  </widget>

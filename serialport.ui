@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Serial Port</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -211,17 +211,10 @@
     </item>
    </layout>
   </widget>
-  <zorder>buttonBox</zorder>
-  <zorder>label_14</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget_2</zorder>
  </widget>
  <tabstops>
   <tabstop>comboBoxBaud</tabstop>
   <tabstop>comboBoxPortas</tabstop>
-  <tabstop>l5</tabstop>
-  <tabstop>portsComboBox</tabstop>
-  <tabstop>refreshButton</tabstop>
  </tabstops>
  <resources/>
  <connections>

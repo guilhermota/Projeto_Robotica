@@ -25,3 +25,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     serialport.ui
+
+RESOURCES += \
+    resources.qrc
