@@ -40,7 +40,7 @@
      <addaction name="actionListar_Portas"/>
      <addaction name="actionTestar_Conexao"/>
     </widget>
-    <addaction name="actionAbrir_Video"/>
+    <addaction name="actionAbrir_Camera"/>
     <addaction name="separator"/>
     <addaction name="menuPorta"/>
    </widget>
@@ -68,9 +68,9 @@
     <string>Sair</string>
    </property>
   </action>
-  <action name="actionAbrir_Video">
+  <action name="actionAbrir_Camera">
    <property name="text">
-    <string>Abrir Video</string>
+    <string>Abrir Camera</string>
    </property>
   </action>
   <action name="actionListar_Portas">
