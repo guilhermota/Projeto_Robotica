@@ -46,9 +46,18 @@ MainWindow::MainWindow(QWidget *parent) :
     labelUsoMemoria = new QLabel(this);
     labelTotalMemoria = new QLabel(this);
     labelMemoriaProcesso = new QLabel(this);
+    labelUsoCpu = new QLabel(this);
+    labelProcessoCpu = new QLabel(this);
     labelTotal = new QLabel("Uso Total: ", this);
     labelUso = new QLabel("Uso Atual: ", this);
-    labelProcesso = new QLabel("Uso Processo: ", this);
+    labelProcesso = new QLabel("Memoria Processo: ", this);
+    labelCpuUso = new QLabel("Uso CPU: ", this);
+    labelCpuProcesso = new QLabel("Processo CPU: ", this);
+
+    ui->statusBar->addPermanentWidget(labelCpuUso);
+        ui->statusBar->addPermanentWidget(labelUsoCpu);
+    ui->statusBar->addPermanentWidget(labelCpuProcesso);
+        ui->statusBar->addPermanentWidget(labelProcessoCpu);
 
     ui->statusBar->addPermanentWidget(labelTotal);
         ui->statusBar->addPermanentWidget(labelTotalMemoria);
@@ -56,7 +65,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->statusBar->addPermanentWidget(labelUsoMemoria);
     ui->statusBar->addPermanentWidget(labelProcesso);
         ui->statusBar->addPermanentWidget(labelMemoriaProcesso);
-
+    init();
+    updateStatus();
     timer->start(1000);
 }
 
@@ -128,11 +138,59 @@ SIZE_T MainWindow::getMemoryUsageProcess()
     return virtualMemUsedByMe;
 }
 
+void MainWindow::init()
+{
+    GetSystemInfo(&sysInfo);
+    numProcessors = sysInfo.dwNumberOfProcessors;
+
+    GetSystemTimeAsFileTime(&ftime);
+    memcpy(&lastCPU, &ftime, sizeof(FILETIME));
+
+    self = GetCurrentProcess();
+    GetProcessTimes(self, &ftime, &ftime, &fsys, &fuser);
+    memcpy(&lastSysCPU, &fsys, sizeof(FILETIME));
+    memcpy(&lastUserCPU, &fuser, sizeof(FILETIME));
+
+    /*PdhOpenQuery(NULL, NULL, &cpuQuery);
+    PdhAddCounter(cpuQuery, L"\\Processor(_Total)\\% Processor Time", NULL, &cpuTotal);
+    PdhCollectQueryData(cpuQuery);*/
+}
+
+double MainWindow::getUsoCpu()
+{
+   /* PDH_FMT_COUNTERVALUE counterVal;
+
+    PdhCollectQueryData(cpuQuery);
+    PdhGetFormattedCounterValue(cpuTotal, PDH_FMT_DOUBLE, NULL, &counterVal);
+    return counterVal.doubleValue;*/
+    return 100;
+}
+
+double MainWindow::getCpuProcesso()
+{
+    GetSystemTimeAsFileTime(&ftime);
+    memcpy(&now, &ftime, sizeof(FILETIME));
+
+    GetProcessTimes(self, &ftime, &ftime, &fsys, &fuser);
+    memcpy(&sys, &fsys, sizeof(FILETIME));
+    memcpy(&user, &fuser, sizeof(FILETIME));
+    percent = (sys.QuadPart - lastSysCPU.QuadPart) + (user.QuadPart - lastUserCPU.QuadPart);
+    percent /= (now.QuadPart - lastCPU.QuadPart);
+    percent /= numProcessors;
+    lastCPU = now;
+    lastUserCPU = user;
+    lastSysCPU = sys;
+
+    return percent * 100;
+}
+
 void MainWindow::updateStatus()
 {
     totalMemoria = getTotalMemory();
     usoMemoria = getMemoryUsage();
     memoriaProcesso = getMemoryUsageProcess();
+    usoCpu = getUsoCpu();
+    processoCpu = getCpuProcesso();
 
     double pctUso = usoMemoria * 100 / totalMemoria;
     double pctProcesso = memoriaProcesso * 100 / totalMemoria;
@@ -140,6 +198,8 @@ void MainWindow::updateStatus()
     labelTotalMemoria->setText(QString::number(totalMemoria) );
     labelUsoMemoria->setText(QString::number(pctUso) + "%");
     labelMemoriaProcesso->setText(QString::number(pctProcesso) + "%");
+    labelUsoCpu->setText(QString::number(usoCpu) + "%");
+    labelProcessoCpu->setText(QString::number(processoCpu) + "%");
 
     ui->statusBar->update();
 }
