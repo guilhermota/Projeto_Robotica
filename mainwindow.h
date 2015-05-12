@@ -41,6 +41,10 @@ private slots:
 
     void on_actionSobre_triggered();
 
+    void on_actionFechar_Conexao_triggered();
+
+    void on_actionFechar_Camera_triggered();
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;

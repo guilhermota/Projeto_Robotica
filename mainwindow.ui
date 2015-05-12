@@ -6,20 +6,43 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>668</width>
-    <height>478</height>
+    <width>672</width>
+    <height>559</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>640</width>
+      <height>480</height>
+     </rect>
+    </property>
+    <property name="whatsThis">
+     <string/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="text">
+     <string>Video</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>668</width>
+     <width>672</width>
      <height>21</height>
     </rect>
    </property>
@@ -39,8 +62,18 @@
      </property>
      <addaction name="actionListar_Portas"/>
      <addaction name="actionTestar_Conexao"/>
+     <addaction name="actionFechar_Conexao"/>
     </widget>
-    <addaction name="actionAbrir_Camera"/>
+    <widget class="QMenu" name="menuCamera">
+     <property name="title">
+      <string>Camera</string>
+     </property>
+     <addaction name="actionAbrir_Camera"/>
+     <addaction name="actionTestar_Camera"/>
+     <addaction name="actionFechar_Camera"/>
+     <addaction name="separator"/>
+    </widget>
+    <addaction name="menuCamera"/>
     <addaction name="separator"/>
     <addaction name="menuPorta"/>
    </widget>
@@ -86,6 +119,21 @@
   <action name="actionSobre">
    <property name="text">
     <string>Sobre</string>
+   </property>
+  </action>
+  <action name="actionFechar_Conexao">
+   <property name="text">
+    <string>Fechar Conexao</string>
+   </property>
+  </action>
+  <action name="actionFechar_Camera">
+   <property name="text">
+    <string>Fechar Camera</string>
+   </property>
+  </action>
+  <action name="actionTestar_Camera">
+   <property name="text">
+    <string>Testar Camera</string>
    </property>
   </action>
  </widget>

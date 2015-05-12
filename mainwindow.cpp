@@ -261,3 +261,14 @@ void MainWindow::on_actionSobre_triggered()
 {
 
 }
+
+void MainWindow::on_actionFechar_Conexao_triggered()
+{
+    serial.fechaConexao();
+    QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
+}
+
+void MainWindow::on_actionFechar_Camera_triggered()
+{
+    video->close();
+}

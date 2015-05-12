@@ -23,6 +23,7 @@ public:
 
     bool isOpen(){return porta.isOpen();}
 
+    void fechaConexao(){porta.close();}
 private slots:
     void on_comboBoxPortas_currentIndexChanged(const QString &arg1);
 
