@@ -69,5 +69,7 @@ void SerialPort::abrePorta(QString nome,qint32 baudrate)
 
 qint64 SerialPort::write(const char *data, qint64 max)
 {
-    return porta.write(data, max);
+    const char *teste = data;
+    qDebug() << "executando serial.write()" << "data "<< teste << " max" << max;
+    return porta.write(teste, max);
 }

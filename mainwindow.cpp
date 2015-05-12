@@ -17,17 +17,17 @@ MainWindow::MainWindow(QWidget *parent) :
     labelUsoMemoria = new QLabel(this);
     labelTotalMemoria = new QLabel(this);
     labelMemoriaProcesso = new QLabel(this);
-    labelUsoCpu = new QLabel(this);
+    /*labelUsoCpu = new QLabel(this);*/
     labelProcessoCpu = new QLabel(this);
     labelTotal = new QLabel("Uso Total: ", this);
     labelUso = new QLabel("Uso Atual: ", this);
     labelProcesso = new QLabel("Memoria Processo: ", this);
-    labelCpuUso = new QLabel("Uso CPU: ", this);
+    //labelCpuUso = new QLabel("Uso CPU: ", this);
     labelCpuProcesso = new QLabel("Processo CPU: ", this);
 
     //adicionando labels na status bar
-    ui->statusBar->addPermanentWidget(labelCpuUso);
-        ui->statusBar->addPermanentWidget(labelUsoCpu);
+    /*ui->statusBar->addPermanentWidget(labelCpuUso);
+        ui->statusBar->addPermanentWidget(labelUsoCpu);*/
     ui->statusBar->addPermanentWidget(labelCpuProcesso);
         ui->statusBar->addPermanentWidget(labelProcessoCpu);
 
@@ -92,15 +92,15 @@ void MainWindow::on_actionListar_Portas_triggered()
 void MainWindow::on_actionTestar_Conexao_triggered()
 {
     if(serial.isOpen()){
-        for(int i = 0; i < 10; i++){
-            char dados = 'f';
+       char dados = 13;
 
-            qDebug("enviando sinal serial");
-            qDebug() << serial.write(&dados, 8);
+       qDebug("enviando sinal serial");
+       qDebug() << serial.write(&dados, 8);
 
-            QThread::msleep(1000);
-        }
-    } else {
+       //serial.write(&dados, 512);
+
+       QThread::msleep(1000);
+      } else {
         QMessageBox::warning(this, "Erro!", "Nao ha nenhuma porta aberta!");
     }
 }
@@ -239,7 +239,7 @@ void MainWindow::updateStatus()
     totalMemoria = getTotalMemory();
     usoMemoria = getMemoryUsage();
     memoriaProcesso = getMemoryUsageProcess();
-    usoCpu = getUsoCpu();
+    //usoCpu = getUsoCpu();
     processoCpu = getCpuProcesso();
 
     double pctUso = usoMemoria * 100 / totalMemoria;
@@ -248,7 +248,7 @@ void MainWindow::updateStatus()
     labelTotalMemoria->setText(QString::number(totalMemoria) );
     labelUsoMemoria->setText(QString::number(pctUso) + "%");
     labelMemoriaProcesso->setText(QString::number(pctProcesso) + "%");
-    labelUsoCpu->setText(QString::number(usoCpu) + "%");
+    //labelUsoCpu->setText(QString::number(usoCpu) + "%");
     labelProcessoCpu->setText(QString::number(processoCpu) + "%");
 
     ui->statusBar->update();
