@@ -22,12 +22,14 @@ LIBS += -LC:\OpenCV\opencv\build\x86\vc12\lib \
 SOURCES += main.cpp\
         mainwindow.cpp \
     serialport.cpp \
-    video.cpp
+    video.cpp \
+    qtopencv.cpp
 
 HEADERS  += mainwindow.h \
     serialport.h \
     serialport.h \
-    video.h
+    video.h \
+    qtopencv.h
 
 FORMS    += mainwindow.ui \
     serialport.ui

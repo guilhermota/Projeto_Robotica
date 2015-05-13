@@ -75,8 +75,10 @@ void MainWindow::on_actionAbrir_Camera_triggered()
     qDebug("Criando objeto Video");
     video = new Video;
 
+
     if(video->open()){
         QMessageBox::information(this, "Ae!", "Camera aberta!");
+        connect(video, SIGNAL(sendQImage(QImage)), this, SLOT(imageReceived(QImage)));
     } else{
         QMessageBox::warning(this, "Erro", "Nao foi possivel abrir a camera.");
     }
@@ -103,6 +105,36 @@ void MainWindow::on_actionTestar_Conexao_triggered()
       } else {
         QMessageBox::warning(this, "Erro!", "Nao ha nenhuma porta aberta!");
     }
+}
+
+//TODO Criar esta janela
+
+void MainWindow::on_actionSobre_triggered()
+{
+
+}
+
+void MainWindow::on_actionFechar_Conexao_triggered()
+{
+    serial.fechaConexao();
+    QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
+}
+
+void MainWindow::on_actionFechar_Camera_triggered()
+{
+    video->close();
+}
+
+void MainWindow::on_actionTestar_Camera_triggered()
+{
+    video->play();
+}
+
+void MainWindow::imageReceived(QImage image)
+{
+    ui->imagem->setPixmap(QPixmap::fromImage(image));
+    //qDebug("Pixamp Atualizado");
+    ui->imagem->show();
 }
 
 //TODO Colocar funcoes de cpu e memoria em outro arquivo
@@ -254,21 +286,3 @@ void MainWindow::updateStatus()
     ui->statusBar->update();
 }
 
-
-//TODO Criar esta janela
-
-void MainWindow::on_actionSobre_triggered()
-{
-
-}
-
-void MainWindow::on_actionFechar_Conexao_triggered()
-{
-    serial.fechaConexao();
-    QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
-}
-
-void MainWindow::on_actionFechar_Camera_triggered()
-{
-    video->close();
-}

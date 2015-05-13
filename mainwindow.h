@@ -7,6 +7,8 @@
 #include <qDebug>
 #include <QLabel>
 #include <QThread>
+#include <QImage>
+#include <QPixmap>
 
 #include "serialport.h"
 #include "video.h"
@@ -44,6 +46,10 @@ private slots:
     void on_actionFechar_Conexao_triggered();
 
     void on_actionFechar_Camera_triggered();
+
+    void on_actionTestar_Camera_triggered();
+
+    void imageReceived(QImage image);
 
 private:
     Ui::MainWindow *ui;
