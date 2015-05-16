@@ -18,18 +18,23 @@ LIBS += -LC:\OpenCV\opencv\build\x86\vc12\lib \
     opencv_core2410.lib \
     opencv_highgui2410.lib \
     opencv_imgproc2410.lib \
+    opencv_objdetect2410.lib \
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     serialport.cpp \
     video.cpp \
-    qtopencv.cpp
+    qtopencv.cpp \
+    facedetector.cpp \
+    medidorperformance.cpp
 
 HEADERS  += mainwindow.h \
     serialport.h \
     serialport.h \
     video.h \
-    qtopencv.h
+    qtopencv.h \
+    facedetector.h \
+    medidorperformance.h
 
 FORMS    += mainwindow.ui \
     serialport.ui
