@@ -12,8 +12,11 @@
 
 #include "serialport.h"
 #include "video.h"
-#include "medidorperformance.h"
 
+#include "Windows.h"
+#include "Psapi.h"
+#include "tchar.h"
+#include "Pdh.h"
 
 namespace Ui {
 class MainWindow;
@@ -52,7 +55,23 @@ private:
     Ui::MainWindow *ui;
     SerialPort serial;
     Video *video;
-    MedidorPerformance mp;
+
+    DWORDLONG getTotalMemory();
+    DWORDLONG getMemoryUsage();
+    SIZE_T getMemoryUsageProcess();
+    double getUsoCpu();
+    double getCpuProcesso();
+    void init();
+
+    ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
+    int numProcessors;
+    HANDLE self;
+    SYSTEM_INFO sysInfo;
+    FILETIME ftime, fsys, fuser;
+    ULARGE_INTEGER now, sys, user;
+    double percent;
+    /*PDH_HQUERY cpuQuery;
+    PDH_HCOUNTER cpuTotal;*/
 
     DWORDLONG totalMemoria;
     DWORDLONG usoMemoria;

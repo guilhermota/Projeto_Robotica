@@ -1,15 +1,12 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#include <string>
 #include <QDebug>
-#include <QMessageBox>
 #include <QThread>
 #include <QImage>
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "qtopencv.h"
-#include "facedetector.h"
 
 class Video : public QThread
 {
@@ -29,9 +26,6 @@ signals:
 
 private:
     cv::VideoCapture cap;
-    FaceDetector* detector;
-
-
 };
 
 #endif // VIDEO_H
