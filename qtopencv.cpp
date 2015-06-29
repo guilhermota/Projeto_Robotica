@@ -32,8 +32,7 @@ QImage cvtCvMat2QImage(const cv::Mat &inMat)
         qDebug("Wrong image format, must be 8_bits\n");
     }
     return qtemp;*/
-    switch ( inMat.type() )
-          {
+    switch (inMat.type()){
              // 8-bit, 4 channel
              case CV_8UC4:
              {

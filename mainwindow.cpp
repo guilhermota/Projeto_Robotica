@@ -1,6 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+/**
+ * @brief MainWindow::MainWindow
+ *
+ * Inicializacao do objeto Janela Principal
+ *
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -92,7 +99,7 @@ void MainWindow::on_actionListar_Portas_triggered()
 void MainWindow::on_actionTestar_Conexao_triggered()
 {
     if(serial.isOpen()){
-       char dados = 13;
+       char dados = 9;
 
        qDebug("enviando sinal serial");
        qDebug() << serial.write(&dados, 8);

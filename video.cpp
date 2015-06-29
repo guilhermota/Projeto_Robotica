@@ -4,6 +4,8 @@
 #define _CAP_WIDTH 640
 #define _CAP_HEIGHT 480
 #define _FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml"
+#define _PROFILE_FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_profile_face.xml"
+#define _EYE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_mcs_nose.xml"
 #define _COR_POSITIVO cv::Scalar(0, 255, 0)
 #define _FACE_RADIUS_RATIO 0.75
 #define _CIRCLE_THICKNESS 2.5
@@ -16,8 +18,7 @@ Video::Video()
     cap.set(CV_CAP_PROP_FPS, _FPS);
     cap.set(CV_CAP_PROP_FORMAT, CV_8U);
 
-    detector = new FaceDetector(std::string(_FACE_CASCADE_PATH));
-    //detector = new FaceDetector(std::string(_FACE_CASCADE_PATH), 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, cv::Size(30,30));
+    detector = new FaceDetector(std::string(_FACE_CASCADE_PATH), std::string(_EYE_CASCADE_PATH));
 }
 
 Video::~Video()
@@ -28,44 +29,51 @@ Video::~Video()
 
 void Video::run()
 {
-    //qDebug("Thread Running");
-
     cv::Mat frame;
     QImage image;
     int delay = 50;
+    std::vector<cv::Rect> faces;
+    bool faceReconhecida = false;
+    bool isFaceOn = false;
 
     cap.read(frame);
-    short int frame_count = 0;
-
-    //qDebug() << delay;
-    std::vector<cv::Rect> faces;
+    short int frame_count = 12;
 
     while(cap.read(frame)){
-        //cv::resize(frame, frame, cv::Size(640, 480));
-        //qDebug("Frame capturado");
-        if(frame_count == 5){
-            frame_count = 0;
+        if(frame_count == 12){
             detector->findFacesInImage(frame, faces);
-            //qDebug() << "Faces empty: " << faces.empty();
-            /*for (std::vector<cv::Rect>::const_iterator face = faces.begin() ; face != faces.end() ; face++){
-                qDebug("tem algo aqui");
-                cv::Point center(face->x + face->width * 0.5, face->y + face->height * 0.5);
-                cv::circle(frame, center, _FACE_RADIUS_RATIO * face->width, _COR_POSITIVO);
-            }*/
+            if(faces.empty()){
+                isFaceOn = false;
+                faceReconhecida = false;
+                //qDebug("face off");
+            } else {
+                isFaceOn = true;
+                //reconhecer;
+                //faceReconhecida = false;
+                //qDebug("face on");
+            }
+
+            frame_count = 0;
         }
-        for(size_t i = 0; i < faces.size(); i++){
-            cv::Point center(faces[i].x + faces[i].width * 0.5, faces[i].y + faces[i].height * 0.5);
-            cv::circle(frame, center, _FACE_RADIUS_RATIO * faces[i].width, _COR_POSITIVO);
-            //cv::rectangle(frame, faces[i], _COR_POSITIVO);
+        //isFaceOn = tracker.findFaces(frame, &face_point);
+
+        if(!faceReconhecida && !faces.empty()){
+            qDebug() << "reconhecendo";
+            faceReconhecida = true;
+        }
+
+        if(isFaceOn){
+            for(size_t i = 0; i < faces.size(); i++){
+                cv::rectangle(frame, faces[i], _COR_POSITIVO);
+            }
+            //cv::rectangle(frame, faces[0], _COR_POSITIVO);
         }
 
         image = cvtCvMat2QImage(frame);
-        //qDebug("Frame convertido");
+
         emit sendQImage(image);
-        //qDebug("Frame enviado");
-        //cv::imshow("MyVideo",frame);
+
         msleep(delay);
-        //if(cv::waitKey(delay) == 27) break;
 
         frame_count++;
     }
@@ -89,7 +97,9 @@ bool Video::open()
 
 void Video::close()
 {
+    qDebug() << "release";
     cap.release();
+    qDebug() << "quit";
     this->quit();
 }
 

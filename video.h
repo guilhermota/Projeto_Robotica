@@ -10,6 +10,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "qtopencv.h"
 #include "facedetector.h"
+#include "facetracker.h"
 
 class Video : public QThread
 {
@@ -30,8 +31,8 @@ signals:
 private:
     cv::VideoCapture cap;
     FaceDetector* detector;
-
-
+    //FaceTracker tracker;
+    cv::Rect face_point;
 };
 
 #endif // VIDEO_H

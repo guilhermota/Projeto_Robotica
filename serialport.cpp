@@ -43,8 +43,7 @@ void SerialPort::on_comboBoxPortas_currentIndexChanged(const QString &arg1)
     ui->_labelNome->setText(porta.portName());
     ui->_labelProduto->setText(QString::number(porta.productIdentifier()));
     ui->_labelVendedor->setText(QString::number(porta.vendorIdentifier()));
-    foreach (const qint32 &it, lista)
-    {
+    foreach (const qint32 &it, lista){
         ui->comboBoxBaud->addItem(QString::number(it));
     }
 }
@@ -69,7 +68,7 @@ void SerialPort::abrePorta(QString nome,qint32 baudrate)
 
 qint64 SerialPort::write(const char *data, qint64 max)
 {
-    const char *teste = data;
-    qDebug() << "executando serial.write()" << "data "<< teste << " max" << max;
-    return porta.write(teste, max);
+    const char *dados = data;
+    qDebug() << "executando serial.write()" << "data "<< dados << " max" << max;
+    return porta.write(dados, max);
 }
