@@ -9,6 +9,9 @@
 #include <QThread>
 #include <QImage>
 #include <QPixmap>
+#include <QString>
+#include <QInputDialog>
+#include <QDir>
 
 #include "serialport.h"
 #include "video.h"
@@ -50,6 +53,8 @@ private slots:
     void imageReceived(QImage image);
 
     void on_actionCarregar_triggered();
+
+    void databaseInputs(QString *host, QString *db, QString *login, QString *senha);
 
 private:
     Ui::MainWindow *ui;

@@ -159,9 +159,41 @@ void MainWindow::updateStatus()
     ui->statusBar->update();
 }
 
+void MainWindow::databaseInputs(QString *host, QString *db, QString *login, QString *senha){
+    QString temp;
+    bool ok;
+    //host
+    temp = QInputDialog::getText(this, tr("Dados Database"),
+                                            tr("Host:"), QLineEdit::Normal,
+                                           "exemple.com, 127.0.0.1", &ok);
+    if (ok && !temp.isEmpty()) *host = temp;
+
+    //database
+    temp = QInputDialog::getText(this, tr("Dados Database"),
+                                            tr("Database:"), QLineEdit::Normal,
+                                            "database_name", &ok);
+    if (ok && !temp.isEmpty()) *db = temp;
+
+    //login
+    temp = QInputDialog::getText(this, tr("Dados Database"),
+                                            tr("Login:"), QLineEdit::Normal,
+                                            "database_user", &ok);
+    if (ok && !temp.isEmpty()) *login = temp;
+
+    //senha
+    temp = QInputDialog::getText(this, tr("Dados Database"),
+                                            tr("Senha:"), QLineEdit::Normal,
+                                            "**************", &ok);
+    if (ok && !temp.isEmpty()) *senha = temp;
+}
+
 void MainWindow::on_actionCarregar_triggered()
 {
-    database db("guilhermo.com.br", "u3209476_db", "u3209476_user", "senhabancodedados123@");
+    QString host, banco, login, senha;
+
+    databaseInputs(&host, &banco, &login, &senha);
+
+    database db(host, banco, login, senha);
 
     db.retrieveFaces(&this->paths, &this->labels);
 
