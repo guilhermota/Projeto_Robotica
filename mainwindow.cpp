@@ -95,7 +95,6 @@ void MainWindow::on_actionListar_Portas_triggered()
     serial.exec();
 }
 
-
 void MainWindow::on_actionTestar_Conexao_triggered()
 {
     if(serial.isOpen()){
@@ -110,13 +109,6 @@ void MainWindow::on_actionTestar_Conexao_triggered()
       } else {
         QMessageBox::warning(this, "Erro!", "Nao ha nenhuma porta aberta!");
     }
-}
-
-//TODO Criar esta janela
-
-void MainWindow::on_actionSobre_triggered()
-{
-
 }
 
 void MainWindow::on_actionFechar_Conexao_triggered()
@@ -141,9 +133,6 @@ void MainWindow::imageReceived(QImage image)
     //qDebug("Pixamp Atualizado");
     ui->imagem->show();
 }
-
-//TODO Colocar funcoes de cpu e memoria em outro arquivo
-
 
 /**
  * @brief MainWindow::updateStatus
@@ -170,3 +159,21 @@ void MainWindow::updateStatus()
     ui->statusBar->update();
 }
 
+void MainWindow::on_actionCarregar_triggered()
+{
+    database db("guilhermo.com.br", "u3209476_db", "u3209476_user", "senhabancodedados123@");
+
+    db.retrieveFaces(&this->paths, &this->labels);
+
+    /*for(size_t i = 0; i < paths.size(); i++){
+        qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(labels[i]);
+    }
+    */
+}
+
+void MainWindow::on_actionSobre_triggered()
+{
+    //QMessageBox::about(this, "Perdao pelo vacilo", "Tentei fazer uma janelinha legal. Mas eu juro que não sei por que esta por** nao funciona :)");
+    Sobre sobre;
+    sobre.exec();
+}

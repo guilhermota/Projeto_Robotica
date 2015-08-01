@@ -13,7 +13,8 @@
 #include "serialport.h"
 #include "video.h"
 #include "medidorperformance.h"
-
+#include "database.h"
+#include "sobre.h"
 
 namespace Ui {
 class MainWindow;
@@ -48,12 +49,13 @@ private slots:
 
     void imageReceived(QImage image);
 
+    void on_actionCarregar_triggered();
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;
     Video *video;
     MedidorPerformance mp;
-
     DWORDLONG totalMemoria;
     DWORDLONG usoMemoria;
     SIZE_T memoriaProcesso;
@@ -64,6 +66,8 @@ private:
 
     QLabel *labelUsoCpu, *labelCpuProcesso, *labelUsoMemoria, *labelTotalMemoria, *labelMemoriaProcesso,
             *labelCpuUso, *labelProcessoCpu, *labelUso, *labelTotal, *labelProcesso;
+
+    std::vector<std::string> paths, labels;
 };
 
 #endif // MAINWINDOW_H
