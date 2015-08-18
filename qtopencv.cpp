@@ -88,6 +88,7 @@ QImage cvtCvMat2QImage(const cv::Mat &inMat)
 cv::Mat cvtQImage2CvMat(const QImage & image)
 {
     cv::Mat cvImage;
+    //qDebug() << "cvtQImage2CvMat - isNull: " << image.isNull() << " depth: " << image.depth() << " format: " << image.format();
     if(!image.isNull() && image.depth() == 32 && image.format() == QImage::Format_RGB32)
     {
         // assume RGB (3 channels)

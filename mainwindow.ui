@@ -78,12 +78,21 @@
       <string>Database</string>
      </property>
      <addaction name="actionCarregar"/>
+     <addaction name="actionTestar_imagens"/>
+    </widget>
+    <widget class="QMenu" name="menuReconhecimento">
+     <property name="title">
+      <string>Reconhecimento</string>
+     </property>
+     <addaction name="actionTreinar"/>
     </widget>
     <addaction name="menuCamera"/>
     <addaction name="separator"/>
     <addaction name="menuPorta"/>
     <addaction name="separator"/>
     <addaction name="menuDatabase"/>
+    <addaction name="separator"/>
+    <addaction name="menuReconhecimento"/>
    </widget>
    <widget class="QMenu" name="menuAjuda">
     <property name="title">
@@ -147,6 +156,16 @@
   <action name="actionCarregar">
    <property name="text">
     <string>Carregar</string>
+   </property>
+  </action>
+  <action name="actionTestar_imagens">
+   <property name="text">
+    <string>Testar imagens</string>
+   </property>
+  </action>
+  <action name="actionTreinar">
+   <property name="text">
+    <string>Treinar</string>
    </property>
   </action>
  </widget>

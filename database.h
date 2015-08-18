@@ -17,9 +17,11 @@ public:
     ~database();
 
     bool retrieveFaces(std::vector<std::string> *path, std::vector<std::string> *labels);
+    bool isConnected();
 
 private:
     //QSqlDatabase *db;
+    bool isOpen;
 };
 
 #endif // DATABASE_H

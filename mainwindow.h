@@ -18,6 +18,9 @@
 #include "medidorperformance.h"
 #include "database.h"
 #include "sobre.h"
+#include "opencv2/highgui/highgui.hpp"
+#include "filedownloader.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -56,6 +59,12 @@ private slots:
 
     void databaseInputs(QString *host, QString *db, QString *login, QString *senha);
 
+    void loadImage();
+
+    void on_actionTestar_imagens_triggered();
+
+    void on_actionTreinar_triggered();
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;
@@ -66,6 +75,7 @@ private:
     SIZE_T memoriaProcesso;
     double usoCpu;
     double processoCpu;
+    FileDownloader *m_pImgCtrl;
 
     QTimer *timer;
 
@@ -73,6 +83,7 @@ private:
             *labelCpuUso, *labelProcessoCpu, *labelUso, *labelTotal, *labelProcesso;
 
     std::vector<std::string> paths, labels;
+    std::vector<cv::Mat> faces;
 };
 
 #endif // MAINWINDOW_H

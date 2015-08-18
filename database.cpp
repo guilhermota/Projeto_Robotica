@@ -9,7 +9,8 @@ database::database(QString hostname, QString dbname, QString username, QString p
     db.setUserName(username);
     db.setPassword(password);
     db.open();
-    if(db.isOpen()){
+    isOpen = db.isOpen();
+    if(isOpen){
         qDebug() << "Conected to database;";
     } else{
         qDebug() << db.driverName();
@@ -37,10 +38,14 @@ bool database::retrieveFaces(std::vector<std::string> *path, std::vector<std::st
     }
 
     while(query.next()){
-        qDebug() << "name: " << query.value(0).toString() << " path: " << query.value(1).toString();
-        path->push_back(query.value(0).toString().toStdString());
-        labels->push_back(query.value(1).toString().toStdString());
+        //qDebug() << "name: " << query.value(0).toString() << " path: " << query.value(1).toString();
+        path->push_back(query.value(1).toString().toStdString());
+        labels->push_back(query.value(0).toString().toStdString());
     }
 
     return true;
 }
+
+ bool database::isConnected(){
+     return isOpen;
+ }

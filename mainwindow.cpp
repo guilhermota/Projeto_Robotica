@@ -165,25 +165,25 @@ void MainWindow::databaseInputs(QString *host, QString *db, QString *login, QStr
     //host
     temp = QInputDialog::getText(this, tr("Dados Database"),
                                             tr("Host:"), QLineEdit::Normal,
-                                           "exemple.com, 127.0.0.1", &ok);
+                                           "exemple.com", &ok);
     if (ok && !temp.isEmpty()) *host = temp;
 
     //database
     temp = QInputDialog::getText(this, tr("Dados Database"),
                                             tr("Database:"), QLineEdit::Normal,
-                                            "database_name", &ok);
+                                            "u3209476", &ok);
     if (ok && !temp.isEmpty()) *db = temp;
 
     //login
     temp = QInputDialog::getText(this, tr("Dados Database"),
                                             tr("Login:"), QLineEdit::Normal,
-                                            "database_user", &ok);
+                                            "u3209476", &ok);
     if (ok && !temp.isEmpty()) *login = temp;
 
     //senha
     temp = QInputDialog::getText(this, tr("Dados Database"),
                                             tr("Senha:"), QLineEdit::Normal,
-                                            "**************", &ok);
+                                            "", &ok);
     if (ok && !temp.isEmpty()) *senha = temp;
 }
 
@@ -195,12 +195,29 @@ void MainWindow::on_actionCarregar_triggered()
 
     database db(host, banco, login, senha);
 
+    if(!db.isConnected()) return;
+
     db.retrieveFaces(&this->paths, &this->labels);
 
     /*for(size_t i = 0; i < paths.size(); i++){
         qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(labels[i]);
+    }*/
+
+    QString url;
+    for(size_t i = 0; i < paths.size(); i++){
+        url = "http://www.guilhermo.com.br/projeto/sistema/" + QString::fromStdString(paths[i]);
+        //qDebug() << url;
+        m_pImgCtrl = new FileDownloader(url, this);
+        connect(m_pImgCtrl, SIGNAL (downloaded()), this, SLOT (loadImage()));
     }
-    */
+
+    /*qDebug() <<  "faces.size" << faces.size();
+
+    for(size_t i = 0; i < faces.size(); i++){
+        qDebug() << "testando mats";
+        cv::imshow("teste", faces[i]);
+        cv::waitKey(5000);
+    }*/
 }
 
 void MainWindow::on_actionSobre_triggered()
@@ -208,4 +225,32 @@ void MainWindow::on_actionSobre_triggered()
     //QMessageBox::about(this, "Perdao pelo vacilo", "Tentei fazer uma janelinha legal. Mas eu juro que não sei por que esta por** nao funciona :)");
     Sobre sobre;
     sobre.exec();
+}
+
+void MainWindow::loadImage()
+{
+    qDebug() << "loadImage()";
+    QImage image;
+    cv::Mat mat;
+    image.loadFromData(m_pImgCtrl->downloadedData());
+    mat = cvtQImage2CvMat(image);
+    cv::resize(mat, mat, cv::Size(640, 480));
+    faces.push_back(mat);
+    /*ui->imagem->setPixmap(QPixmap::fromImage(cvtCvMat2QImage(mat)));
+    ui->imagem->show();*/
+    qDebug() <<  "faces.size(): " << faces.size();
+}
+
+void MainWindow::on_actionTestar_imagens_triggered()
+{
+    for(size_t i = 0; i < faces.size(); i++){
+        qDebug() << "testando mat " << i;
+        cv::imshow("teste", faces[i]);
+        cv::waitKey(500);
+    }
+}
+
+void MainWindow::on_actionTreinar_triggered()
+{
+
 }

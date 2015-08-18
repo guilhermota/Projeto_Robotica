@@ -7,6 +7,7 @@
 QT += core gui
 QT += serialport
 QT += sql
+QT += network
 QTPLUGIN += QSQLMYSQL
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -38,7 +39,9 @@ SOURCES += main.cpp\
     medidorperformance.cpp \
     facetracker.cpp \
     database.cpp \
-    sobre.cpp
+    sobre.cpp \
+    filedownloader.cpp \
+    recognizer.cpp
 
 HEADERS  += mainwindow.h \
     serialport.h \
@@ -49,7 +52,9 @@ HEADERS  += mainwindow.h \
     medidorperformance.h \
     facetracker.h \
     database.h \
-    sobre.h
+    sobre.h \
+    filedownloader.h \
+    recognizer.h
 
 FORMS    += mainwindow.ui \
     serialport.ui \
