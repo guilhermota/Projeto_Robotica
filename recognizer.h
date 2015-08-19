@@ -20,7 +20,7 @@ public:
     void load(const QString& filename);
 
 private:
-    cv::FaceRecognizer facerec;
+    //cv::FaceRecognizer facerec;
 
 };
 

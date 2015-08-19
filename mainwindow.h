@@ -82,8 +82,9 @@ private:
     QLabel *labelUsoCpu, *labelCpuProcesso, *labelUsoMemoria, *labelTotalMemoria, *labelMemoriaProcesso,
             *labelCpuUso, *labelProcessoCpu, *labelUso, *labelTotal, *labelProcesso;
 
-    std::vector<std::string> paths, labels;
+    std::vector<std::string> paths, names;
     std::vector<cv::Mat> faces;
+    std::vector<int> labels;
 };
 
 #endif // MAINWINDOW_H

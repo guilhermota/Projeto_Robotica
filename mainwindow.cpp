@@ -197,11 +197,12 @@ void MainWindow::on_actionCarregar_triggered()
 
     if(!db.isConnected()) return;
 
-    db.retrieveFaces(&this->paths, &this->labels);
+    db.retrieveFaces(&this->paths, &this->names, &this->labels);
 
-    /*for(size_t i = 0; i < paths.size(); i++){
-        qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(labels[i]);
-    }*/
+    for(size_t i = 0; i < paths.size(); i++){
+        //qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(names[i]);
+        qDebug() << "names: " << QString::fromStdString(names[i]) << " label: " << labels[i];
+    }
 
     QString url;
     for(size_t i = 0; i < paths.size(); i++){

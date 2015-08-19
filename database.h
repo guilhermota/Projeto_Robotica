@@ -16,7 +16,7 @@ public:
     database(QString hostname, QString dbname, QString username, QString password);
     ~database();
 
-    bool retrieveFaces(std::vector<std::string> *path, std::vector<std::string> *labels);
+    bool retrieveFaces(std::vector<std::string> *path, std::vector<std::string> *names, std::vector<int> *labels);
     bool isConnected();
 
 private:

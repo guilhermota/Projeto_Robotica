@@ -19,6 +19,7 @@ Video::Video()
     cap.set(CV_CAP_PROP_FORMAT, CV_8U);
 
     detector = new FaceDetector(std::string(_FACE_CASCADE_PATH), std::string(_EYE_CASCADE_PATH));
+    recognizer = cv::createLBPHFaceRecognizer();
 }
 
 Video::~Video()
@@ -97,9 +98,9 @@ bool Video::open()
 
 void Video::close()
 {
-    qDebug() << "release";
+    //qDebug() << "release";
     cap.release();
-    qDebug() << "quit";
+    //qDebug() << "quit";
     this->quit();
 }
 
@@ -107,4 +108,36 @@ void Video::play()
 {
     //qDebug("video start()");
     this->start();
+}
+
+
+
+void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std::vector<int> labels)
+{
+    recognizer->train(src, labels);
+    std::map<int, std::string> infoLabels;
+    for(size_t i = 0; i < labels.size(); i++){
+        if(infoLabels.find(labels[i]) == infoLabels.end()){
+            infoLabels[labels[i]] = names[i];
+        }
+    }
+    recognizer->setLabelsInfo(infoLabels);
+    return;
+}
+
+int Video::predict(cv::InputArray src)
+{
+    return recognizer->predict(src);
+}
+
+void Video::save(const QString& filename)
+{
+    recognizer->save(filename.toStdString());
+    return;
+}
+
+void Video::load(const QString& filename)
+{
+    recognizer->load(filename.toStdString());
+    return;
 }
