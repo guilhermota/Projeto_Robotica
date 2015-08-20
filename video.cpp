@@ -6,7 +6,8 @@
 #define _FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml"
 #define _PROFILE_FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_profile_face.xml"
 #define _EYE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_mcs_nose.xml"
-#define _COR_POSITIVO cv::Scalar(0, 255, 0)
+#define _COR_POSITIVO cv::Scalar(255, 128, 0)
+#define _COR_NEGATIVO cv::Scalar(255, 0, 0)
 #define _FACE_RADIUS_RATIO 0.75
 #define _CIRCLE_THICKNESS 2.5
 #define _LINE_TYPE CV_AA
@@ -37,6 +38,7 @@ void Video::run()
     std::vector<cv::Rect> faces;
     bool faceReconhecida = false;
     bool isFaceOn = false;
+    int prediction = 0;
 
     cap.read(frame);
     short int frame_count = 12;
@@ -51,6 +53,14 @@ void Video::run()
             } else {
                 isFaceOn = true;
                 //reconhecer;
+                cv::Mat gray;
+                cv::cvtColor(frame(faces[0]), gray, CV_BGR2GRAY);
+                prediction = predict(gray);
+                if(prediction == 0){
+                    qDebug() << "nao reconheceu" << prediction;
+                } else{
+                    qDebug() << "reconheceu" << prediction;
+                }
                 //faceReconhecida = false;
                 //qDebug("face on");
             }
@@ -65,9 +75,18 @@ void Video::run()
         }
 
         if(isFaceOn){
-            for(size_t i = 0; i < faces.size(); i++){
-                cv::rectangle(frame, faces[i], _COR_POSITIVO);
-            }
+            //for(size_t i = 0; i < faces.size(); i++){
+            cv::Scalar cor;
+            if(prediction == 0 ) cor = _COR_NEGATIVO;
+            else cor = _COR_POSITIVO;
+
+            cv::rectangle(frame, faces[0], cor);
+            std::string box_text = cv::format("Prediction = %d -> %s", prediction, recognizer->getLabelInfo(prediction));
+            int pos_x = std::max(faces[0].tl().x - 10, 0);
+            int pos_y = std::max(faces[0].tl().y - 10, 0);
+            cv::putText(frame, box_text, cv::Point(pos_x, pos_y), cv::FONT_HERSHEY_DUPLEX, 1.0, cor, 2.0);
+             //}
+
             //cv::rectangle(frame, faces[0], _COR_POSITIVO);
         }
 
@@ -118,13 +137,13 @@ void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std:
     qDebug() << "vai treinar";
     recognizer->train(src, labels);
     qDebug() << "treinou";
-    /*std::map<int, std::string> infoLabels;
+    std::map<int, std::string> infoLabels;
     for(size_t i = 0; i < labels.size(); i++){
         if(infoLabels.find(labels[i]) == infoLabels.end()){
             infoLabels[labels[i]] = names[i];
         }
     }
-    recognizer->setLabelsInfo(infoLabels);*/
+    recognizer->setLabelsInfo(infoLabels);
     return;
 }
 
