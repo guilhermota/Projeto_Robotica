@@ -236,6 +236,7 @@ void MainWindow::loadImage()
     image.loadFromData(m_pImgCtrl->downloadedData());
     mat = cvtQImage2CvMat(image);
     cv::resize(mat, mat, cv::Size(640, 480));
+    cv::cvtColor(mat, mat, CV_BGR2GRAY);
     faces.push_back(mat);
     /*ui->imagem->setPixmap(QPixmap::fromImage(cvtCvMat2QImage(mat)));
     ui->imagem->show();*/
@@ -253,5 +254,5 @@ void MainWindow::on_actionTestar_imagens_triggered()
 
 void MainWindow::on_actionTreinar_triggered()
 {
-
+    video->train(faces, names, labels);
 }

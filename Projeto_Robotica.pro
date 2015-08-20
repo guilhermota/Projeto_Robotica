@@ -15,32 +15,32 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Projeto_Robotica
 TEMPLATE = app
 
-INCLUDEPATH += C:\OpenCV\opencv\build\include
-#INCLUDEPATH += C:\Programs\opencv24\opencv\build\include
+#INCLUDEPATH += C:\OpenCV\opencv\build\include
+INCLUDEPATH += C:\Programs\opencv24\opencv\build\include
 
-#LIBS += -LC:\Programs\opencv24\opencv\build\x86\vc12\lib \
-#    opencv_core249.lib \
-#    opencv_highgui249.lib \
-#    opencv_imgproc249.lib \
-#    opencv_objdetect249.lib \
-#    opencv_nonfree249.lib \
-#    opencv_video249.lib \
-#    opencv_contrib249.lib \
-#    opencv_features2d249.lib \
-#    opencv_calib3d249.lib \
-#    opencv_flann249.lib \
+LIBS += -LC:\Programs\opencv24\opencv\build\x86\vc12\lib \
+    opencv_core249.lib \
+    opencv_highgui249.lib \
+    opencv_imgproc249.lib \
+    opencv_objdetect249.lib \
+    opencv_nonfree249.lib \
+    opencv_video249.lib \
+    opencv_contrib249.lib \
+    opencv_features2d249.lib \
+    opencv_calib3d249.lib \
+    opencv_flann249.lib \
 
-LIBS += -LC:\OpenCV\opencv\build\x86\vc12\lib \
-    opencv_core2410.lib \
-    opencv_highgui2410.lib \
-    opencv_imgproc2410.lib \
-    opencv_objdetect2410.lib \
-    opencv_nonfree2410.lib \
-    opencv_video2410.lib \
-    opencv_contrib2410.lib \
-    opencv_features2d2410.lib \
-    opencv_calib3d2410.lib \
-    opencv_flann2410.lib \
+#LIBS += -LC:\OpenCV\opencv\build\x86\vc12\lib \
+#    opencv_core2410.lib \
+#    opencv_highgui2410.lib \
+#    opencv_imgproc2410.lib \
+#    opencv_objdetect2410.lib \
+#    opencv_nonfree2410.lib \
+#    opencv_video2410.lib \
+#    opencv_contrib2410.lib \
+#    opencv_features2d2410.lib \
+#    opencv_calib3d2410.lib \
+#    opencv_flann2410.lib \
 
 SOURCES += main.cpp\
     mainwindow.cpp \

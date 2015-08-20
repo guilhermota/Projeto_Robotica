@@ -13,6 +13,7 @@
 
 Video::Video()
 {
+    qDebug() << "criando video";
     cap.set(CV_CAP_PROP_FRAME_WIDTH, _CAP_WIDTH);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, _CAP_HEIGHT);
     cap.set(CV_CAP_PROP_FPS, _FPS);
@@ -114,14 +115,16 @@ void Video::play()
 
 void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std::vector<int> labels)
 {
+    qDebug() << "vai treinar";
     recognizer->train(src, labels);
-    std::map<int, std::string> infoLabels;
+    qDebug() << "treinou";
+    /*std::map<int, std::string> infoLabels;
     for(size_t i = 0; i < labels.size(); i++){
         if(infoLabels.find(labels[i]) == infoLabels.end()){
             infoLabels[labels[i]] = names[i];
         }
     }
-    recognizer->setLabelsInfo(infoLabels);
+    recognizer->setLabelsInfo(infoLabels);*/
     return;
 }
 
