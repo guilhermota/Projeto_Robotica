@@ -87,16 +87,17 @@ QImage cvtCvMat2QImage(const cv::Mat &inMat)
  */
 cv::Mat cvtQImage2CvMat(const QImage & image)
 {
+    QImage image_converted = image.convertToFormat(QImage::Format_RGB32);
     cv::Mat cvImage;
-    //qDebug() << "cvtQImage2CvMat - isNull: " << image.isNull() << " depth: " << image.depth() << " format: " << image.format();
-    if(!image.isNull() && image.depth() == 32 && image.format() == QImage::Format_RGB32)
+    //qDebug() << "cvtQImage2CvMat - isNull: " << image_converted.isNull() << " depth: " << image_converted.depth() << " format: " << image_converted.format();
+    if(!image_converted.isNull() && image_converted.depth() == 32 && image_converted.format() == QImage::Format_RGB32)
     {
         // assume RGB (3 channels)
         int channels = 3;
-        cvImage = cv::Mat(image.height(), image.width(), CV_8UC3);
+        cvImage = cv::Mat(image_converted.height(), image_converted.width(), CV_8UC3);
         unsigned char * data = cvImage.data;
-        const IplImage test = cvImage;
-        qDebug("%d vs %d\n", cvImage.cols*int(cvImage.elemSize()), test.widthStep);
+        //const IplImage test = cvImage;
+        //qDebug("%d vs %d\n", cvImage.cols*int(cvImage.elemSize()), test.widthStep);
         for(int y = 0; y < image.height(); ++y, data+=cvImage.cols*cvImage.elemSize())
         {
             for(int x = 0; x < image.width(); ++x)

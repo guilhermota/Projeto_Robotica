@@ -92,12 +92,14 @@ void MainWindow::on_actionAbrir_Camera_triggered()
 void MainWindow::on_actionListar_Portas_triggered()
 {    
     qDebug("Abrindo Dialog Listar Portas");
-    serial.exec();
+    //serial.exec();
+    video->abreSerial();
+    QMessageBox::information(this, "Conexao Aberta", "Conexao Aberta.");
 }
 
 void MainWindow::on_actionTestar_Conexao_triggered()
 {
-    if(serial.isOpen()){
+    /*if(serial.isOpen()){
        char dados = 9;
 
        qDebug("enviando sinal serial");
@@ -108,12 +110,15 @@ void MainWindow::on_actionTestar_Conexao_triggered()
        QThread::msleep(1000);
       } else {
         QMessageBox::warning(this, "Erro!", "Nao ha nenhuma porta aberta!");
-    }
+    }*/
 }
 
 void MainWindow::on_actionFechar_Conexao_triggered()
 {
-    serial.fechaConexao();
+    qDebug("Fechando Conexão Serial");
+    //serial.fechaConexao();
+    //QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
+    video->fechaSerial();
     QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
 }
 
@@ -191,34 +196,37 @@ void MainWindow::on_actionCarregar_triggered()
 {
     QString host, banco, login, senha;
 
-    databaseInputs(&host, &banco, &login, &senha);
+    //databaseInputs(&host, &banco, &login, &senha);
 
-    database db(host, banco, login, senha);
+    //database db(host, banco, login, senha);
+    database db("guilhermo.com.br", "u3209476_", "u3209476_", "senhabancodedados");
 
     if(!db.isConnected()) return;
+
+    paths.clear(); names.clear(); labels.clear();
 
     db.retrieveFaces(&this->paths, &this->names, &this->labels);
 
     for(size_t i = 0; i < paths.size(); i++){
-        //qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(names[i]);
-        qDebug() << "names: " << QString::fromStdString(names[i]) << " label: " << labels[i];
+        QString url;
+        url = "http://www.guilhermo.com.br/projeto/sistema/" + QString::fromStdString(paths[i]);
+        urls.push_back(url);
+        urls_.push_back(false);
     }
 
-    QString url;
+    /*for(size_t i = 0; i < paths.size(); i++){
+        //qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(names[i]);
+        qDebug() << "names: " << QString::fromStdString(names[i]) << " label: " << labels[i];
+    }*/
+    faces.clear();
+
     for(size_t i = 0; i < paths.size(); i++){
-        url = "http://www.guilhermo.com.br/projeto/sistema/" + QString::fromStdString(paths[i]);
-        //qDebug() << url;
-        m_pImgCtrl = new FileDownloader(url, this);
+        m_pImgCtrl = new FileDownloader(urls[i], this);
         connect(m_pImgCtrl, SIGNAL (downloaded()), this, SLOT (loadImage()));
     }
 
-    /*qDebug() <<  "faces.size" << faces.size();
+    qDebug() <<  "faces.size(): " << faces.size();
 
-    for(size_t i = 0; i < faces.size(); i++){
-        qDebug() << "testando mats";
-        cv::imshow("teste", faces[i]);
-        cv::waitKey(5000);
-    }*/
 }
 
 void MainWindow::on_actionSobre_triggered()
@@ -230,12 +238,14 @@ void MainWindow::on_actionSobre_triggered()
 
 void MainWindow::loadImage()
 {
-    qDebug() << "loadImage()";
+    //qDebug() << "loadImage()";
     QImage image;
     cv::Mat mat;
     image.loadFromData(m_pImgCtrl->downloadedData());
+    qDebug() << image.isNull();
     mat = cvtQImage2CvMat(image);
-    cv::resize(mat, mat, cv::Size(640, 480));
+    if(mat.empty()){ qDebug() << "empty"; return;}
+    //cv::resize(mat, mat, cv::Size(640, 480));
     cv::cvtColor(mat, mat, CV_BGR2GRAY);
     faces.push_back(mat);
     /*ui->imagem->setPixmap(QPixmap::fromImage(cvtCvMat2QImage(mat)));
@@ -255,4 +265,19 @@ void MainWindow::on_actionTestar_imagens_triggered()
 void MainWindow::on_actionTreinar_triggered()
 {
     video->train(faces, names, labels);
+}
+
+void MainWindow::on_actionTestar_Laser_triggered()
+{
+    video->testarLaser();
+}
+
+void MainWindow::on_actionSalvar_triggered()
+{
+    video->save("modelo_reconhecimento.mr");
+}
+
+void MainWindow::on_actionCarregar_2_triggered()
+{
+    video->load("modelo_reconhecimento.mr");
 }

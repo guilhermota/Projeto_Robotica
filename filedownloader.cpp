@@ -16,16 +16,20 @@ FileDownloader::FileDownloader(QUrl imageUrl, QObject *parent) :
 FileDownloader::~FileDownloader() { }
 
 void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
-    qDebug() << pReply->errorString();
-    qDebug() << "pReply.attribute():" << QVariant(pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()).toString();
+    //qDebug() << pReply->errorString();
+    //qDebug() << "pReply.attribute():" << QVariant(pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()).toString();
     qDebug() << "pReply.size():" << pReply->size();
+    qDebug() << "preply" << pReply->isFinished() << pReply->bytesAvailable();
     m_DownloadedData = pReply->readAll();
     qDebug() << "m_DownloadedData.size(): " << m_DownloadedData.size();
     pReply->deleteLater();
     emit downloaded();
+
 }
 
 QByteArray FileDownloader::downloadedData() const {
     //qDebug() << "downloadedData";
+    qDebug() << "isempty" << m_DownloadedData.isEmpty();
+    qDebug() << "isnull" << m_DownloadedData.isNull();
     return m_DownloadedData;
 }

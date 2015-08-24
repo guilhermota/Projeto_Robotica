@@ -72,6 +72,7 @@
      <addaction name="actionTestar_Camera"/>
      <addaction name="actionFechar_Camera"/>
      <addaction name="separator"/>
+     <addaction name="actionTestar_Laser"/>
     </widget>
     <widget class="QMenu" name="menuDatabase">
      <property name="title">
@@ -85,6 +86,8 @@
       <string>Reconhecimento</string>
      </property>
      <addaction name="actionTreinar"/>
+     <addaction name="actionSalvar"/>
+     <addaction name="actionCarregar_2"/>
     </widget>
     <addaction name="menuCamera"/>
     <addaction name="separator"/>
@@ -166,6 +169,21 @@
   <action name="actionTreinar">
    <property name="text">
     <string>Treinar</string>
+   </property>
+  </action>
+  <action name="actionTestar_Laser">
+   <property name="text">
+    <string>Testar Laser</string>
+   </property>
+  </action>
+  <action name="actionSalvar">
+   <property name="text">
+    <string>Salvar</string>
+   </property>
+  </action>
+  <action name="actionCarregar_2">
+   <property name="text">
+    <string>Carregar</string>
    </property>
   </action>
  </widget>

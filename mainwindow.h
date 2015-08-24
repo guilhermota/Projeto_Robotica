@@ -65,6 +65,12 @@ private slots:
 
     void on_actionTreinar_triggered();
 
+    void on_actionTestar_Laser_triggered();
+
+    void on_actionSalvar_triggered();
+
+    void on_actionCarregar_2_triggered();
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;
@@ -85,6 +91,8 @@ private:
     std::vector<std::string> paths, names;
     std::vector<cv::Mat> faces;
     std::vector<int> labels;
+    std::vector<QString> urls;
+    std::vector<bool> urls_;
 };
 
 #endif // MAINWINDOW_H

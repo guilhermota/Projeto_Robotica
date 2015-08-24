@@ -31,10 +31,10 @@ bool database::retrieveFaces(std::vector<std::string> *path, std::vector<std::st
                "where a.id_usuario = c.usuarios_id_usuario "
                "and b.id_imagem = c.imagens_id_imagem;");
 
-    qDebug() << query.lastError().text();
+    //qDebug() << query.lastError().text();
 
     if(ok){
-        qDebug() << query.isSelect();
+        //qDebug() << query.isSelect();
     }
 
     while(query.next()){
