@@ -58,31 +58,10 @@ void SerialPort::on_buttonBox_accepted()
 
 void SerialPort::abrePorta(QString nome,qint32 baudrate)
 {
-    porta.setPortName(nome);
-
-    if(!porta.open(QIODevice::ReadWrite)){
-        QMessageBox::critical(this, "Erro!", "Esta porta nao pode ser aberta!");
-    }
-    porta.setBaudRate(baudrate);
-    porta.setDataBits(QSerialPort::Data8);
-    porta.setParity(QSerialPort::NoParity);
-    porta.setStopBits(QSerialPort::OneStop);
-    porta.setFlowControl(QSerialPort::NoFlowControl);
-    return;
+    porta = new SerialArduino((char*)nome.toStdString().c_str());
 }
 
-void SerialPort::write(const char data)
+void SerialPort::write(char *data)
 {
-    qint64 escrito;
-    QByteArray ba(&data);
-    if (porta.isOpen() && porta.isWritable()){
-        qDebug() << "escrevendo " << ba;
-        escrito = porta.write(ba);
-        porta.flush();
-        //porta.waitForBytesWritten(-1);
-        qDebug() << "data has been send" << data << escrito << endl;
-        qDebug() << porta.readAll();
-    }
-    if(escrito == -1) qDebug() << porta.errorString();
-    if(escrito != ba.length()) qDebug() << porta.errorString();
+    qDebug() << "escreveu? " << porta->WriteData((char*)data, 8);
 }

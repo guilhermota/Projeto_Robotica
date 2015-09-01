@@ -6,6 +6,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QList>
 #include <QString>
+#include "serialarduino.h"
 
 namespace Ui {
 class SerialPort;
@@ -19,11 +20,11 @@ public:
     explicit SerialPort(QWidget *parent = 0);
     ~SerialPort();
 
-    void write(const char data);
+    void write(char *data);
 
-    bool isOpen(){return porta.isOpen();}
+    bool isOpen(){return porta->IsConnected();}
 
-    void fechaConexao(){porta.close();}
+    void fechaConexao(){delete porta;}
 
 private slots:
     void on_comboBoxPortas_currentIndexChanged(const QString &arg1);
@@ -40,7 +41,8 @@ private:
 
     void listaPortas();
 
-    QSerialPort porta;
+    //QSerialPort porta;
+    SerialArduino *porta;
 
 };
 

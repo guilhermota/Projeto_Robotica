@@ -7,7 +7,7 @@
 #include <QThread>
 #include <QImage>
 #include <QString>
-#include <QSound>
+//#include <QSound>
 #include "qtopencv.h"
 #include "facedetector.h"
 #include "facetracker.h"

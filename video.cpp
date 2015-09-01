@@ -80,7 +80,7 @@ void Video::run()
                 //qDebug() << "reconheceu";
                 faceReconhecida = true;
                 cor = _COR_POSITIVO;
-                box_text = recognizer->getLabelInfo(label);
+                //box_text = recognizer->getLabelInfo(label);
                 //qDebug() << QString::fromStdString(box_text);
                 atirou = false;
             } else{
@@ -97,9 +97,9 @@ void Video::run()
         if(isFaceOn){
             //for(size_t i = 0; i < faces.size(); i++){
             cv::rectangle(frame, faces[0], cor);
-            int pos_x = std::max(faces[0].tl().x - 10, 0);
-            int pos_y = std::max(faces[0].tl().y - 10, 0);
-            cv::putText(frame, box_text, cv::Point(pos_x, pos_y), cv::FONT_HERSHEY_DUPLEX, 0.5, cor, 1.0);
+            //int pos_x = std::max(faces[0].tl().x - 10, 0);
+            //int pos_y = std::max(faces[0].tl().y - 10, 0);
+            //cv::putText(frame, box_text, cv::Point(pos_x, pos_y), cv::FONT_HERSHEY_DUPLEX, 0.5, cor, 1.0);
              //}
         }
 
@@ -182,7 +182,7 @@ void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std:
         }
         qDebug() << i << labels[i] << QString::fromStdString(infoLabels[labels[i]]);
     }
-    recognizer->setLabelsInfo(infoLabels);
+    //recognizer->setLabelsInfo(infoLabels);
 
     for (std::map<int, std::string>::iterator it=infoLabels.begin(); it!=infoLabels.end(); ++it)
         qDebug() << it->first << " => " << QString::fromStdString(it->second);
@@ -352,16 +352,19 @@ void Video::ajustaMira(cv::Rect facePos)
     int faceMax = facePos.x + facePos.width + 20; // maior ponto para atirar com um valor de ajuste
 
     if(laserPos.x > faceMax){
-        serial.write('d');
+        char *data = (char *)'d';
+        serial.write(data);
         qDebug() << "Girando motor para direita";
         //QThread::msleep(500);
     } else if(laserPos.x < faceMin ){
-        serial.write('l');
+        char *data = (char *)'l';
+        serial.write(data);
         qDebug() << "Girando motor para esquerda";
         //QThread::msleep(500);
     } else{
         qDebug() << "Atirou!";
-        serial.write('a');
+        char *data = (char *)'a';
+        serial.write(data);
         //QThread::msleep(500);
         atirou = true;
     }
@@ -379,7 +382,7 @@ void Video::fechaSerial()
 
 void Video::tocaSom()
 {
-    QSound::play(":/rsc/aviso.wav");
+    //QSound::play(":/rsc/aviso.wav");
 }
 
 void Video::setThreshold(double threshold)
