@@ -15,6 +15,7 @@ public:
 private:
     cv::CascadeClassifier cascadeFaces;
     cv::CascadeClassifier cascadeEyes;
+    cv::CascadeClassifier cascadeOculos;
 
     cv::Mat tmp;
     std::vector<cv::Rect> faces;

@@ -71,6 +71,10 @@ private slots:
 
     void on_actionCarregar_2_triggered();
 
+    void on_doubleSpinBox_valueChanged(double arg1);
+
+    void escreveConfianca(double confianca);
+
 private:
     Ui::MainWindow *ui;
     SerialPort serial;

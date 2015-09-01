@@ -8,6 +8,7 @@ QT += core gui
 QT += serialport
 QT += sql
 QT += network
+QT += multimedia
 QTPLUGIN += QSQLMYSQL
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

@@ -7,6 +7,7 @@
 #include <QThread>
 #include <QImage>
 #include <QString>
+#include <QSound>
 #include "qtopencv.h"
 #include "facedetector.h"
 #include "facetracker.h"
@@ -45,8 +46,15 @@ public:
     void achaLaser(cv::Mat *frame);
     void ajustaMira(cv::Rect facePos);
 
+    void setThreshold(double threshold);
+
 signals:
     void sendQImage(QImage image);
+    void emiteSom();
+    void emiteConfianca(double confianca);
+
+private slots:
+    void tocaSom();
 
 private:
     cv::VideoCapture cap;
@@ -54,6 +62,7 @@ private:
     SerialPort serial;
     //Recognizer* recognizer;
     cv::Ptr<cv::FaceRecognizer> recognizer;
+    cv::Ptr<cv::FaceRecognizer> recognizer1;
     cv::Rect face_point;
 
     cv::Mat frame;
@@ -64,6 +73,8 @@ private:
     bool isFaceOn = false;
     double con;
     int label = -1;
+    double con1;
+    int label1 = -1;
     cv::Scalar cor;
     std::string box_text;
 
@@ -76,6 +87,8 @@ private:
 
     cv::Point laserPos;
     bool atirou;
+    bool avisou;
+    double threshold = 275;
 };
 
 #endif // VIDEO_H

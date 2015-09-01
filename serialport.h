@@ -19,7 +19,7 @@ public:
     explicit SerialPort(QWidget *parent = 0);
     ~SerialPort();
 
-    qint64 write(const char *data, qint64 max);
+    void write(const char data);
 
     bool isOpen(){return porta.isOpen();}
 

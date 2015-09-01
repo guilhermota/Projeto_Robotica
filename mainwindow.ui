@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>672</width>
-    <height>559</height>
+    <height>578</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,6 +34,61 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>500</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Threshold:</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="doubleSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>500</y>
+      <width>62</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <double>100000000000000000.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>500</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Confianca:</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>500</y>
+      <width>62</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="maximum">
+     <double>100000000000000004764729344.000000000000000</double>
     </property>
    </widget>
   </widget>

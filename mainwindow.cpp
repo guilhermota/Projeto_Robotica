@@ -79,6 +79,7 @@ void MainWindow::on_actionAbrir_Camera_triggered()
 {
     qDebug("Criando objeto Video");
     video = new Video;
+    connect(video, SIGNAL(emiteConfianca(double)), this, SLOT(escreveConfianca(double)));
 
 
     if(video->open()){
@@ -245,8 +246,6 @@ void MainWindow::loadImage()
     qDebug() << image.isNull();
     mat = cvtQImage2CvMat(image);
     if(mat.empty()){ qDebug() << "empty"; return;}
-    //cv::resize(mat, mat, cv::Size(640, 480));
-    cv::cvtColor(mat, mat, CV_BGR2GRAY);
     faces.push_back(mat);
     /*ui->imagem->setPixmap(QPixmap::fromImage(cvtCvMat2QImage(mat)));
     ui->imagem->show();*/
@@ -274,10 +273,20 @@ void MainWindow::on_actionTestar_Laser_triggered()
 
 void MainWindow::on_actionSalvar_triggered()
 {
-    video->save("modelo_reconhecimento.mr");
+    video->save("modelo_reconhecimento2.mr");
 }
 
 void MainWindow::on_actionCarregar_2_triggered()
 {
-    video->load("modelo_reconhecimento.mr");
+    video->load("modelo_reconhecimento2.mr");
+}
+
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
+{
+    video->setThreshold(arg1);
+}
+
+void MainWindow::escreveConfianca(double confianca)
+{
+    ui->doubleSpinBox_2->setValue(confianca);
 }

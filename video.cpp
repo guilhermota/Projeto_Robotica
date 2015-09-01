@@ -22,6 +22,9 @@ Video::Video()
 
     detector = new FaceDetector(std::string(_FACE_CASCADE_PATH), std::string(_EYE_CASCADE_PATH));
     recognizer = cv::createLBPHFaceRecognizer();
+    recognizer1 = cv::createEigenFaceRecognizer();
+
+    connect(this, SIGNAL(emiteSom()), this, SLOT(tocaSom()));
 }
 
 Video::~Video()
@@ -34,6 +37,8 @@ void Video::run()
 {
     cap.read(frame);
     short int frame_count = 12;
+    recognizer->set("threshold", threshold);
+    recognizer1->set("threshold", threshold);
 
     while(cap.read(frame)){
         if(frame_count == 12){
@@ -41,6 +46,7 @@ void Video::run()
             if(faces.empty()){
                 isFaceOn = false;
                 faceReconhecida = false;
+                avisou = false;
                 //qDebug("face off");
             } else {
                 isFaceOn = true;
@@ -53,29 +59,38 @@ void Video::run()
         }
         //isFaceOn = tracker.findFaces(frame, &face_point);
         //cv::namedWindow("teste");
-        recognizer->set("threshold", 275);
         if(!faceReconhecida && !faces.empty()){
             //qDebug() << "reconhecendo";
             cv::Mat gray;
             cv::cvtColor(frame(faces[0]), gray, CV_BGR2GRAY);
+            cv::resize(gray, gray, cv::Size(200,200));
             //cv::normalize(frame(faces[0]), gray, 0, 255, cv::NORM_MINMAX, CV_8UC1);
             //cv::imshow("teste", gray);
             //cv::waitKey(50);
             //prediction = recognizer->predict(gray);
             recognizer->predict(gray, label, con);
-            qDebug() << label << con;
-            if(con < 275){
-                qDebug() << "reconheceu";
+            recognizer1->predict(gray, label1, con1);
+            qDebug() << con << con1 << label << label1;
+            double ratio = con/con1;
+            if(con == 0 || con1 == 0) ratio = 1;
+            if(con > 1000 || con1 > 1000) ratio = -1;
+            emit emiteConfianca(ratio);
+            if(ratio < 2 && ratio > 0.5){
+            //if(con < threshold){
+                //qDebug() << "reconheceu";
                 faceReconhecida = true;
                 cor = _COR_POSITIVO;
                 box_text = recognizer->getLabelInfo(label);
-                qDebug() << QString::fromStdString(box_text);
+                //qDebug() << QString::fromStdString(box_text);
                 atirou = false;
             } else{
-                qDebug() << "nao reconheceu";
+                //qDebug() << "nao reconheceu";
                 faceReconhecida = false;
                 cor = _COR_NEGATIVO;
                 box_text = "Desconhecido";
+                if(!avisou) emit emiteSom();
+                avisou = true;
+            //}
             }
         }
 
@@ -134,8 +149,30 @@ void Video::play()
 
 void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std::vector<int> labels)
 {
-    //qDebug() << "vai treinar";
-    recognizer->train(src, labels);
+    std::vector<cv::Mat> temp;
+    std::vector<cv::Rect> faces;
+
+    for(size_t i = 0; i < src.size(); i++){
+        /*cv::namedWindow("teste");
+        cv::imshow("teste", src[i]);
+        cv::waitKey(1000);
+        cv::destroyWindow("teste");*/
+        //cv::resize(src[i], src[i], cv::Size(640, 480));
+        //src[i].convertTo(src[i], CV_8UC3);
+        //qDebug() << src[i].channels();
+        //cv::cvtColor(src[i], src[i], CV_BGR2GRAY);
+        qDebug() << "detectando";
+        detector->findFacesInImage(src[i], faces);
+        qDebug() << "achou";
+        qDebug() << faces.size();
+        cv::Mat mat = src[i](faces[0]);
+        cv::resize(mat, mat, cv::Size(200,200));
+        cv::cvtColor(mat, mat, cv::COLOR_BGR2GRAY);
+        cv::equalizeHist(mat, mat);
+        temp.push_back(mat);
+    }
+    recognizer->train(temp, labels);
+    recognizer1->train(temp, labels);
     qDebug() << "treinou";
     std::map<int, std::string> infoLabels;
     for(size_t i = 0; i < labels.size(); i++){
@@ -159,13 +196,19 @@ int Video::predict(cv::InputArray src)
 
 void Video::save(const QString& filename)
 {
-    recognizer->save(filename.toStdString());
+    std::string file = filename.toStdString();
+    std::string file1 = filename.toStdString() + "_eigen";
+    recognizer->save(file);
+    recognizer1->save(file1);
     return;
 }
 
 void Video::load(const QString& filename)
 {
-    recognizer->load(filename.toStdString());
+    std::string file = filename.toStdString();
+    std::string file1 = filename.toStdString() + "_eigen";
+    recognizer->load(file);
+    recognizer1->load(file1);
     return;
 }
 
@@ -305,21 +348,21 @@ void Video::ajustaMira(cv::Rect facePos)
 {
     if(!serial.isOpen()) return;
 
-    int faceMin = facePos.x + 20; // menor ponto para atirar com um valor de ajuste
-    int faceMax = facePos.x + facePos.width - 20; // maior ponto para atirar com um valor de ajuste
+    int faceMin = facePos.x - 20; // menor ponto para atirar com um valor de ajuste
+    int faceMax = facePos.x + facePos.width + 20; // maior ponto para atirar com um valor de ajuste
 
-    if(laserPos.x < faceMin){
-        serial.write("d", 64);
+    if(laserPos.x > faceMax){
+        serial.write('d');
         qDebug() << "Girando motor para direita";
-        QThread::msleep(50);
-    } else if(laserPos.x > faceMax ){
-        serial.write("l", 64);
+        //QThread::msleep(500);
+    } else if(laserPos.x < faceMin ){
+        serial.write('l');
         qDebug() << "Girando motor para esquerda";
-        QThread::msleep(50);
+        //QThread::msleep(500);
     } else{
         qDebug() << "Atirou!";
-        serial.write("a", 64);
-        QThread::msleep(50);
+        serial.write('a');
+        //QThread::msleep(500);
         atirou = true;
     }
 }
@@ -332,4 +375,16 @@ void Video::abreSerial()
 void Video::fechaSerial()
 {
     serial.fechaConexao();
+}
+
+void Video::tocaSom()
+{
+    QSound::play(":/rsc/aviso.wav");
+}
+
+void Video::setThreshold(double threshold)
+{
+    recognizer->set("threshold", threshold);
+    recognizer1->set("threshold", threshold);
+    this->threshold = threshold;
 }
