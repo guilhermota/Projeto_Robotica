@@ -1,6 +1,9 @@
 #include "database.h"
 
-#include <QSqlError>
+/**
+ * @brief database::database
+ * Abre conexão com o banco de dados
+ */
 database::database(QString hostname, QString dbname, QString username, QString password)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
@@ -18,11 +21,12 @@ database::database(QString hostname, QString dbname, QString username, QString p
     }
 }
 
-database::~database()
-{
+database::~database(){}
 
-}
-
+/**
+ * @brief database::retrieveFaces
+ * Executa query que busca os usuarios cadastrados, seus nomes e o diretorio de suas imagens
+ */
 bool database::retrieveFaces(std::vector<std::string> *path, std::vector<std::string> *names, std::vector<int> *labels)
 {
     QSqlQuery query;
@@ -47,6 +51,10 @@ bool database::retrieveFaces(std::vector<std::string> *path, std::vector<std::st
     return true;
 }
 
+/**
+ * @brief database::isConnected
+ * Retorna se a conexão está aberta ou não
+ */
  bool database::isConnected(){
      return isOpen;
  }

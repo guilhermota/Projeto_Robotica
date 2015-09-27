@@ -1,6 +1,10 @@
+/**
+ * Esta classe está disponível no site oficial do Arduino (http://playground.arduino.cc/Interfacing/CPPWindows)
+ * Ela server para fazer a interface entre a linguagem C++ e o Arduíno
+ */
+
 #ifndef SERIALARDUINO_H
 #define SERIALARDUINO_H
-
 
 #define ARDUINO_WAIT_TIME 2000
 

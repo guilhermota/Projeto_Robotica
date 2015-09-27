@@ -7,11 +7,9 @@
 #include <QThread>
 #include <QImage>
 #include <QString>
-//#include <QSound>
+#include <QSound>
 #include "qtopencv.h"
 #include "facedetector.h"
-#include "facetracker.h"
-//#include "recognizer.h"
 #include "serialport.h"
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"

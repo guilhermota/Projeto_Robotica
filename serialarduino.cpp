@@ -1,8 +1,14 @@
+/**
+ * Esta classe está disponível no site oficial do Arduino (http://playground.arduino.cc/Interfacing/CPPWindows)
+ * Ela server para fazer a interface entre a linguagem C++ e o Arduíno
+ * A única mudança realizada foi mudar a forma como mensagens são exibidas.
+ * Ao invés da função printf, está sendo usada o método QDebug, para melhor interação com o resto do sistema 
+ */
+
 #include "serialarduino.h"
 #include <QDebug>
 
-SerialArduino::SerialArduino(char *portName)
-{
+SerialArduino::SerialArduino(char *portName){
     //We're not yet connected
     this->connected = false;
 
@@ -71,8 +77,7 @@ SerialArduino::SerialArduino(char *portName)
 
 }
 
-SerialArduino::~SerialArduino()
-{
+SerialArduino::~SerialArduino(){
     //Check if we are connected before trying to disconnect
     if(this->connected)
     {
@@ -83,8 +88,7 @@ SerialArduino::~SerialArduino()
     }
 }
 
-int SerialArduino::ReadData(char *buffer, unsigned int nbChar)
-{
+int SerialArduino::ReadData(char *buffer, unsigned int nbChar){
     //Number of bytes we'll have read
     DWORD bytesRead;
     //Number of bytes we'll really ask to read
@@ -122,8 +126,7 @@ int SerialArduino::ReadData(char *buffer, unsigned int nbChar)
 }
 
 
-bool SerialArduino::WriteData(char *buffer, unsigned int nbChar)
-{
+bool SerialArduino::WriteData(char *buffer, unsigned int nbChar){
     DWORD bytesSend;
 
     //Try to write the buffer on the Serial port
@@ -138,10 +141,7 @@ bool SerialArduino::WriteData(char *buffer, unsigned int nbChar)
         return true;
 }
 
-bool SerialArduino::IsConnected()
-{
+bool SerialArduino::IsConnected(){
     //Simply return the connection status
     return this->connected;
 }
-
-

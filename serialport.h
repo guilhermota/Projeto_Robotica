@@ -6,6 +6,8 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QList>
 #include <QString>
+#include <qDebug>
+#include <QMessageBox>
 #include "serialarduino.h"
 
 namespace Ui {

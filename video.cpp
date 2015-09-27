@@ -12,9 +12,12 @@
 #define _CIRCLE_THICKNESS 2.5
 #define _LINE_TYPE CV_AA
 
-Video::Video()
-{
-    qDebug() << "criando video";
+/**
+ * @brief Video::Video
+ * Iniciliza objeto video, criando Detector de Faces e Reconhecedor
+ */
+ Video::Video(){
+ qDebug() << "criando video";
     cap.set(CV_CAP_PROP_FRAME_WIDTH, _CAP_WIDTH);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, _CAP_HEIGHT);
     cap.set(CV_CAP_PROP_FPS, _FPS);
@@ -27,14 +30,18 @@ Video::Video()
     connect(this, SIGNAL(emiteSom()), this, SLOT(tocaSom()));
 }
 
-Video::~Video()
-{
+
+Video::~Video(){
     //delete detector;
     this->close();
 }
 
-void Video::run()
-{
+/**
+ * @brief Video::run
+ * Este é o metódo executado na thread do video. É aqui que o frame é lido, as faces são detectadas e reconhecidas,
+ * toma a decisão de o que fazer, ajusta a mira e atira, e emite o frame para a GUI mostra-lo
+ */
+void Video::run(){
     cap.read(frame);
     short int frame_count = 12;
     recognizer->set("threshold", threshold);
@@ -108,24 +115,20 @@ void Video::run()
         }
 
         image = cvtCvMat2QImage(frame);
-
         emit sendQImage(image);
-
         msleep(delay);
-
         frame_count++;
     }
 }
 
-
+/**
+ * @brief Video::open
+ * Abre webcam
+ */
 //TODO Escolher qual camera abrir
-bool Video::open()
-{
+bool Video::open(){
     //qDebug("Abrindo Video");
-    //cap.open("C:/Users/guilhermo/Desktop/Two.and.a.Half.Men.S12E09.HDTV.x264-LOL.mp4");
     cap.open(0);
-
-    //qDebug("Video aberto");
     if(cap.isOpened()){
         return true;
     } else{
@@ -133,34 +136,34 @@ bool Video::open()
     }
 }
 
-void Video::close()
-{
+/**
+ * @brief Video::close
+ * Para a execução da thread
+ */
+void Video::close(){
     //qDebug() << "release";
     cap.release();
     //qDebug() << "quit";
     this->quit();
 }
 
-void Video::play()
-{
+/**
+ * @brief Video::play
+ * Começa a execução da thread
+ */
+void Video::play(){
     //qDebug("video start()");
     this->start();
 }
 
-void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std::vector<int> labels)
-{
+/**
+ * @brief Video::train
+ * Procura faces nas imagens para terinar, as pre-processa e então terina os algoritmos
+ */
+void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std::vector<int> labels){
     std::vector<cv::Mat> temp;
     std::vector<cv::Rect> faces;
-
     for(size_t i = 0; i < src.size(); i++){
-        /*cv::namedWindow("teste");
-        cv::imshow("teste", src[i]);
-        cv::waitKey(1000);
-        cv::destroyWindow("teste");*/
-        //cv::resize(src[i], src[i], cv::Size(640, 480));
-        //src[i].convertTo(src[i], CV_8UC3);
-        //qDebug() << src[i].channels();
-        //cv::cvtColor(src[i], src[i], CV_BGR2GRAY);
         qDebug() << "detectando";
         detector->findFacesInImage(src[i], faces);
         qDebug() << "achou";
@@ -189,13 +192,11 @@ void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std:
     return;
 }
 
-int Video::predict(cv::InputArray src)
-{
-    return recognizer->predict(src);
-}
-
-void Video::save(const QString& filename)
-{
+/**
+ * @brief Video::save
+ * Salva treinamento dos algoritmos
+ */
+void Video::save(const QString& filename){
     std::string file = filename.toStdString();
     std::string file1 = filename.toStdString() + "_eigen";
     recognizer->save(file);
@@ -203,8 +204,11 @@ void Video::save(const QString& filename)
     return;
 }
 
-void Video::load(const QString& filename)
-{
+/**
+ * @brief Video::load
+ * Carrega treinamento dos algoritmos
+ */
+void Video::load(const QString& filename){
     std::string file = filename.toStdString();
     std::string file1 = filename.toStdString() + "_eigen";
     recognizer->load(file);
@@ -212,30 +216,13 @@ void Video::load(const QString& filename)
     return;
 }
 
-void Video::testarLaser()
-{
-    /*cv::namedWindow("Control", CV_WINDOW_AUTOSIZE); //create a window called "Control"
+/**
+ * @brief Video::testarLaser
+ * Testa algortimo de detecção do laser
+ */
+void Video::testarLaser(){
 
-     int iLowH = 49;
-     int iHighH = 102;
-
-     int iLowS = 94;
-     int iHighS = 253;
-
-     int iLowV = 147;
-     int iHighV = 255;
-
-      //Create trackbars in "Control" window
-     cvCreateTrackbar("LowH", "Control", &iLowH, 179); //Hue (0 - 179)
-     cvCreateTrackbar("HighH", "Control", &iHighH, 179);
-
-     cvCreateTrackbar("LowS", "Control", &iLowS, 255); //Saturation (0 - 255)
-     cvCreateTrackbar("HighS", "Control", &iHighS, 255);
-
-     cvCreateTrackbar("LowV", "Control", &iLowV, 255); //Value (0 - 255)
-     cvCreateTrackbar("HighV", "Control", &iHighV, 255);*/
-
-    configuraLaser();
+    //configuraLaser();
 
      while (true){
       cv::Mat imgOriginal;
@@ -267,58 +254,15 @@ void Video::testarLaser()
           qDebug() << "esc key is pressed by user" << endl;
           break;
         }
-
-      //cv::cvtColor(imgOriginal, imgOriginal, cv::COLOR_BGR2GRAY); qDebug() << "foi";
-      /*imgOriginal = imgOriginal + cv::Scalar(-10, -10 -10);
-      imgOriginal.convertTo(imgOriginal, -1, 0.7, 0);
-
-      cv::medianBlur(imgOriginal, imgOriginal, 3);
-
-      cv::Mat imgHSV;
-
-      cv::cvtColor(imgOriginal, imgHSV, cv::COLOR_BGR2HSV); //Convert the captured frame from BGR to HSV
-
-      cv::Mat imgThresholded;
-
-      cv::inRange(imgHSV, cv::Scalar(iLowH, iLowS, iLowV), cv::Scalar(iHighH, iHighS, iHighV), imgThresholded);
-
-      cv::erode(imgThresholded, imgThresholded, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)));
-      cv::dilate( imgThresholded, imgThresholded, getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)));
-
-      cv::dilate( imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)));
-      cv::erode(imgThresholded, imgThresholded, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)));
-
-      cv::GaussianBlur(imgThresholded, imgThresholded, cv::Size(9, 9), 2, 2);
-
-      std::vector<cv::Vec3f> circles;
-      cv::HoughCircles( imgThresholded, circles, CV_HOUGH_GRADIENT, 1, imgThresholded.rows/8, 200, 100, 0, 0 );
-
-        /// Draw the circles detected
-        for( size_t i = 0; i < circles.size(); i++ )
-        {
-            cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-            int radius = cvRound(circles[i][2]);
-            // circle center
-            cv::circle( imgOriginal, center, 3, cv::Scalar(0,255,0), -1, 8, 0 );
-            // circle outline
-            cv::circle( imgOriginal, center, radius, cv::Scalar(0,0,255), 3, 8, 0 );
-         }
-
-      cv::imshow("Thresholded Image", imgThresholded); //show the thresholded image
-      cv::imshow("Original", imgOriginal); //show the original image
-
-      if (cv::waitKey(30) == 27){
-        qDebug() << "esc key is pressed by user" << endl;
-        break;
-      }*/
-
     }
     return;
-
 }
 
-void Video::configuraLaser()
-{
+/**
+ * @brief Video::configuraLaser
+ * Configura a detecção do laser
+ */
+void Video::configuraLaser(){
     cv::namedWindow("Controle", CV_WINDOW_AUTOSIZE);
 
     cvCreateTrackbar("Min Hue", "Control", &iLowH, 179); //Hue (0 - 179)
@@ -331,8 +275,11 @@ void Video::configuraLaser()
     cvCreateTrackbar("Max Val", "Control", &iHighV, 255);
 }
 
-void Video::achaLaser(cv::Mat *frame)
-{
+/**
+ * @brief Video::achaLaser
+ * Acha a posição do laser no frame
+ */
+void Video::achaLaser(cv::Mat *frame){
     double minVal, maxVal;
     cv::Point minPos;
 
@@ -344,8 +291,11 @@ void Video::achaLaser(cv::Mat *frame)
     //qDebug() << "minVal = " << minVal << "maxVal = " << maxVal << "minLoc = " << minLoc.x << minLoc.y << "maxLoc = " << maxLoc.x << maxLoc.y;
 }
 
-void Video::ajustaMira(cv::Rect facePos)
-{
+/**
+ * @brief Video::ajustaMira
+ * Ajusta a mira da sentry e atira, enviando informações para o Arduino
+ */
+void Video::ajustaMira(cv::Rect facePos){
     if(!serial.isOpen()) return;
 
     int faceMin = facePos.x - 20; // menor ponto para atirar com um valor de ajuste
@@ -370,23 +320,35 @@ void Video::ajustaMira(cv::Rect facePos)
     }
 }
 
-void Video::abreSerial()
-{
+/**
+ * @brief Video::abreSerial
+ * Abre porta USB
+ */
+void Video::abreSerial(){
     serial.exec();
 }
 
-void Video::fechaSerial()
-{
+/**
+ * @brief Video::fechaSerial
+ * Fecha porta USB
+ */
+void Video::fechaSerial(){
     serial.fechaConexao();
 }
 
-void Video::tocaSom()
-{
-    //QSound::play(":/rsc/aviso.wav");
+/**
+ * @brief Video::tocaSom
+ * Toca som de aviso
+ */
+void Video::tocaSom(){
+    QSound::play(":/rsc/aviso.wav");
 }
 
-void Video::setThreshold(double threshold)
-{
+/**
+ * @brief Video::setThreshold
+ * Atualiza threshold dos algoritmos
+ */
+void Video::setThreshold(double threshold){
     recognizer->set("threshold", threshold);
     recognizer1->set("threshold", threshold);
     this->threshold = threshold;

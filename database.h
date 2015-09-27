@@ -5,6 +5,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlQuery>
+#include <QSqlError>
 #include <QDebug>
 
 #include <vector>

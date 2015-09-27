@@ -3,15 +3,11 @@
 
 /**
  * @brief MainWindow::MainWindow
- *
- * Inicializacao do objeto Janela Principal
- *
- * @param parent
+ * Inicialização do objeto Janela Principal
  */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow){
     ui->setupUi(this);
 
     //timer update janela principal
@@ -51,14 +47,16 @@ MainWindow::MainWindow(QWidget *parent) :
     timer->start(1000);
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
     delete ui;
     delete video;
 }
 
-void MainWindow::on_actionSair_triggered()
-{
+/**
+ * @brief MainWindow::on_actionSair_triggered
+ * Fecha o programa
+ */
+void MainWindow::on_actionSair_triggered(){
     //mensagem ara confirmar a saida
     QMessageBox msgBox;
     msgBox.setText("Sair");
@@ -75,8 +73,11 @@ void MainWindow::on_actionSair_triggered()
     }
 }
 
-void MainWindow::on_actionAbrir_Camera_triggered()
-{
+/**
+ * @brief MainWindow::on_actionSair_triggered
+ * Cria objeto Video
+ */
+void MainWindow::on_actionAbrir_Camera_triggered(){
     qDebug("Criando objeto Video");
     video = new Video;
     connect(video, SIGNAL(emiteConfianca(double)), this, SLOT(escreveConfianca(double)));
@@ -90,16 +91,22 @@ void MainWindow::on_actionAbrir_Camera_triggered()
     }
 }
 
-void MainWindow::on_actionListar_Portas_triggered()
-{    
+/**
+ * @brief MainWindow::on_actionListar_Portas_triggered
+ * Abre porta serial
+ */
+void MainWindow::on_actionListar_Portas_triggered(){
     qDebug("Abrindo Dialog Listar Portas");
     //serial.exec();
     video->abreSerial();
     QMessageBox::information(this, "Conexao Aberta", "Conexao Aberta.");
 }
 
-void MainWindow::on_actionTestar_Conexao_triggered()
-{
+/**
+ * @brief MainWindow::on_actionTestar_Conexao_triggered
+ * Testa conexão USB
+ */
+void MainWindow::on_actionTestar_Conexao_triggered(){
     /*if(serial.isOpen()){
        char dados = 9;
 
@@ -114,8 +121,11 @@ void MainWindow::on_actionTestar_Conexao_triggered()
     }*/
 }
 
-void MainWindow::on_actionFechar_Conexao_triggered()
-{
+/**
+ * @brief MainWindow::on_actionFechar_Conexao_triggered
+ * Fecha conexão USB.
+ */
+void MainWindow::on_actionFechar_Conexao_triggered(){
     qDebug("Fechando Conexão Serial");
     //serial.fechaConexao();
     //QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
@@ -123,18 +133,27 @@ void MainWindow::on_actionFechar_Conexao_triggered()
     QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
 }
 
-void MainWindow::on_actionFechar_Camera_triggered()
-{
+/**
+ * @brief MainWindow::on_actionFechar_Camera_triggered
+ * Para execução do objeto Video
+ */
+void MainWindow::on_actionFechar_Camera_triggered(){
     video->close();
 }
 
-void MainWindow::on_actionTestar_Camera_triggered()
-{
+/**
+ * @brief MainWindow::on_actionTestar_Camera_triggered
+ * Inicia reprodução do video e reconhecimento
+ */
+void MainWindow::on_actionTestar_Camera_triggered(){
     video->play();
 }
 
-void MainWindow::imageReceived(QImage image)
-{
+/**
+ * @brief MainWindow::imageReceived
+ * Atualiza vídeo na interface gráfica
+ */
+void MainWindow::imageReceived(QImage image){
     ui->imagem->setPixmap(QPixmap::fromImage(image));
     //qDebug("Pixamp Atualizado");
     ui->imagem->show();
@@ -142,11 +161,9 @@ void MainWindow::imageReceived(QImage image)
 
 /**
  * @brief MainWindow::updateStatus
- *
  * Esta funcao atualiza os valores sendo mostrados na janela princiapal.
  */
-void MainWindow::updateStatus()
-{
+void MainWindow::updateStatus(){
     totalMemoria = mp.getTotalMemory();
     usoMemoria = mp.getMemoryUsage();
     memoriaProcesso = mp.getMemoryUsageProcess();
@@ -165,6 +182,10 @@ void MainWindow::updateStatus()
     ui->statusBar->update();
 }
 
+/**
+ * @brief MainWindow::databaseInputs
+ * Lê as informações necessárias para conectar ao banco de dados
+ */
 void MainWindow::databaseInputs(QString *host, QString *db, QString *login, QString *senha){
     QString temp;
     bool ok;
@@ -193,8 +214,11 @@ void MainWindow::databaseInputs(QString *host, QString *db, QString *login, QStr
     if (ok && !temp.isEmpty()) *senha = temp;
 }
 
-void MainWindow::on_actionCarregar_triggered()
-{
+/**
+ * @brief MainWindow::on_actionCarregar_triggered
+ * Faz download das imagens dos usuarios cadastrados no banco de dados
+ */
+void MainWindow::on_actionCarregar_triggered(){
     QString host, banco, login, senha;
 
     //databaseInputs(&host, &banco, &login, &senha);
@@ -230,15 +254,21 @@ void MainWindow::on_actionCarregar_triggered()
 
 }
 
-void MainWindow::on_actionSobre_triggered()
-{
+/**
+ * @brief MainWindow::on_actionSobre_triggered
+ * Abre janela "Sobre"
+ */
+void MainWindow::on_actionSobre_triggered(){
     //QMessageBox::about(this, "Perdao pelo vacilo", "Tentei fazer uma janelinha legal. Mas eu juro que não sei por que esta por** nao funciona :)");
     Sobre sobre;
     sobre.exec();
 }
 
-void MainWindow::loadImage()
-{
+/**
+ * @brief MainWindow::loadImage
+ * Carrega imagens e as converte para cv::Mat
+ */
+void MainWindow::loadImage(){
     //qDebug() << "loadImage()";
     QImage image;
     cv::Mat mat;
@@ -252,8 +282,11 @@ void MainWindow::loadImage()
     qDebug() <<  "faces.size(): " << faces.size();
 }
 
-void MainWindow::on_actionTestar_imagens_triggered()
-{
+/**
+ * @brief MainWindow::on_actionTestar_imagens_triggered
+ * Mostra imagens carregadas
+ */
+void MainWindow::on_actionTestar_imagens_triggered(){
     for(size_t i = 0; i < faces.size(); i++){
         qDebug() << "testando mat " << i;
         cv::imshow("teste", faces[i]);
@@ -261,31 +294,50 @@ void MainWindow::on_actionTestar_imagens_triggered()
     }
 }
 
-void MainWindow::on_actionTreinar_triggered()
-{
+/**
+ * @brief MainWindow::on_actionTreinar_triggered(){
+ * Treina algortimo de reconhecimento
+ */
+void MainWindow::on_actionTreinar_triggered(){
     video->train(faces, names, labels);
 }
 
-void MainWindow::on_actionTestar_Laser_triggered()
-{
+/**
+ * @brief MainWindow::on_actionTestar_Laser_triggered
+ * Testa algoritmo de detecção do laser
+ */
+void MainWindow::on_actionTestar_Laser_triggered(){
     video->testarLaser();
 }
 
-void MainWindow::on_actionSalvar_triggered()
-{
+/**
+ * @brief MainWindow::on_actionSalvar_triggered
+ * Salva treinamento do algortimo de reconhecimento
+ */
+void MainWindow::on_actionSalvar_triggered(){
     video->save("modelo_reconhecimento2.mr");
 }
 
-void MainWindow::on_actionCarregar_2_triggered()
-{
+/**
+ * @brief  MainWindow::on_actionCarregar_2_triggered
+ * Carrega treinamento do algortimo de reconhecimento
+ */
+void MainWindow::on_actionCarregar_2_triggered(){
     video->load("modelo_reconhecimento2.mr");
 }
 
-void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
-{
+/**
+ * @brief MainWindow::on_doubleSpinBox_valueChanged
+ * Altera threshold do reconhecimento
+ */
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1){
     video->setThreshold(arg1);
 }
 
+/**
+ * @brief MainWindow::escreveConfianca
+ * Atualiza informação da confianca do reconhecimento na GUI
+ */
 void MainWindow::escreveConfianca(double confianca)
 {
     ui->doubleSpinBox_2->setValue(confianca);
