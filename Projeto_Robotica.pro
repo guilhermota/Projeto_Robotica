@@ -50,11 +50,9 @@ SOURCES += main.cpp\
     qtopencv.cpp \
     facedetector.cpp \
     medidorperformance.cpp \
-    #facetracker.cpp \
     database.cpp \
     sobre.cpp \
     filedownloader.cpp \
-    #recognizer.cpp
     serialarduino.cpp
 
 HEADERS  += mainwindow.h \
@@ -64,11 +62,9 @@ HEADERS  += mainwindow.h \
     qtopencv.h \
     facedetector.h \
     medidorperformance.h \
-    #facetracker.h \
     database.h \
     sobre.h \
     filedownloader.h \
-    #recognizer.h
     serialarduino.h
 
 FORMS    += mainwindow.ui \
