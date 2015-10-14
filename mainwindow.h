@@ -41,13 +41,9 @@ private slots:
 
     void on_actionListar_Portas_triggered();
 
-    void on_actionTestar_Conexao_triggered();
-
     void updateStatus();
 
     void on_actionSobre_triggered();
-
-    void on_actionFechar_Conexao_triggered();
 
     void on_actionFechar_Camera_triggered();
 
@@ -74,6 +70,12 @@ private slots:
     void on_doubleSpinBox_valueChanged(double arg1);
 
     void escreveConfianca(double confianca);
+
+    void on_actionCarregar_local_triggered();
+
+    void on_actionTestar_Conexao_triggered();
+
+    void on_actionFechar_Conexao_triggered();
 
 private:
     Ui::MainWindow *ui;

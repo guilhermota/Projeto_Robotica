@@ -116,8 +116,8 @@
       <string>Porta</string>
      </property>
      <addaction name="actionListar_Portas"/>
-     <addaction name="actionTestar_Conexao"/>
-     <addaction name="actionFechar_Conexao"/>
+     <addaction name="actionTestar_Conexao_2"/>
+     <addaction name="actionFechar_Conexao_2"/>
     </widget>
     <widget class="QMenu" name="menuCamera">
      <property name="title">
@@ -135,6 +135,7 @@
      </property>
      <addaction name="actionCarregar"/>
      <addaction name="actionTestar_imagens"/>
+     <addaction name="actionCarregar_local"/>
     </widget>
     <widget class="QMenu" name="menuReconhecimento">
      <property name="title">
@@ -239,6 +240,21 @@
   <action name="actionCarregar_2">
    <property name="text">
     <string>Carregar</string>
+   </property>
+  </action>
+  <action name="actionCarregar_local">
+   <property name="text">
+    <string>Carregar local</string>
+   </property>
+  </action>
+  <action name="actionTestar_Conexao_2">
+   <property name="text">
+    <string>Testar Conexao</string>
+   </property>
+  </action>
+  <action name="actionFechar_Conexao_2">
+   <property name="text">
+    <string>Fechar Conexao</string>
    </property>
   </action>
  </widget>

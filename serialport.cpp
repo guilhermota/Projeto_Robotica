@@ -76,5 +76,5 @@ void SerialPort::abrePorta(QString nome,qint32 baudrate){
  * Escreve na porta USB
  */
 void SerialPort::write(char *data){
-    qDebug() << "escreveu? " << porta->WriteData((char*)data, 8);
+    qDebug() << "escreveu? " << porta->WriteData(data, 8);
 }

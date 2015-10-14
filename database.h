@@ -7,7 +7,7 @@
 #include <QtSql/QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
-#include <QNetworkAccessManager>
+
 
 #include <vector>
 #include <string>
@@ -20,7 +20,7 @@ public:
 
     bool retrieveFaces(std::vector<std::string> *path, std::vector<std::string> *names, std::vector<int> *labels);
     bool isConnected();
-    void uploadImagem(QByteArray imagem);
+    void uploadImagem(QByteArray imagem, int id);
 
 private:
     //QSqlDatabase *db;

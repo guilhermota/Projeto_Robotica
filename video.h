@@ -17,6 +17,13 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/objdetect/objdetect.hpp"
 
+#include <QObject>
+#include <QByteArray>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QBuffer>
+
 
 class Video : public QThread
 {
@@ -45,6 +52,10 @@ public:
     void ajustaMira(cv::Rect facePos);
 
     void setThreshold(double threshold);
+
+    void enviaImagem(QByteArray imagem, int id);
+
+    void replyFinished(QNetworkReply*);
 
 signals:
     void sendQImage(QImage image);
@@ -84,8 +95,9 @@ private:
     int iHighV = 255;
 
     cv::Point laserPos;
-    bool atirou;
-    bool avisou;
+    bool atirou = false;
+    bool avisou = false;
+    bool enviou = false;
     double threshold = 275;
 };
 

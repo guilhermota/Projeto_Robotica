@@ -8,6 +8,7 @@ database::database(QString hostname, QString dbname, QString username, QString p
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName(hostname);
+    db.setPort(3307);
     db.setDatabaseName(dbname);
     db.setUserName(username);
     db.setPassword(password);
@@ -63,25 +64,8 @@ bool database::retrieveFaces(std::vector<std::string> *path, std::vector<std::st
   * @brief database::uploadImagem
   * Envia imagem ao servidor
   */
- void database::uploadImagem(QByteArray imagem)
+ void database::uploadImagem(QByteArray imagem, int id)
  {
-     QSqlQuery query;
-     QString query1 = "insert into imagens";
-     QString query2 = "";
-     QString query3 = "";
-     bool ok1 = query.exec(query1);
-     bool ok2 = query.exec(query2);
-     bool ok3 = query.exec(query3);
-
-
-     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-     connect(manager, SIGNAL(finished(QNetworkReply*)),
-             this, SLOT(replyFinished(QNetworkReply*)));
-
-     manager->post(QNetworkRequest(QUrl("http://guilhermo.com.br/projeto/sistema/recebeimagem.php")), imagem);
-
-
-
      /*QHttp
      http->setHost(siteURLEdit->text());
 

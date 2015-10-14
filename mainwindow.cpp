@@ -224,7 +224,8 @@ void MainWindow::on_actionCarregar_triggered(){
     //databaseInputs(&host, &banco, &login, &senha);
 
     //database db(host, banco, login, senha);
-    database db("guilhermo.com.br", "u3209476_", "u3209476_", "senhabancodedados");
+    //database db("guilhermo.com.br", "u3209476_", "u3209476_", "senhabancodedados");
+    database db("127.0.0.1", "u3209476_db", "root", "usbw");
 
     if(!db.isConnected()) return;
 
@@ -234,15 +235,17 @@ void MainWindow::on_actionCarregar_triggered(){
 
     for(size_t i = 0; i < paths.size(); i++){
         QString url;
-        url = "http://www.guilhermo.com.br/projeto/sistema/" + QString::fromStdString(paths[i]);
+        //url = "http://www.guilhermo.com.br/projeto/sistema/" + QString::fromStdString(paths[i]);
+        url = "http://localhost:8080/Projeto/projeto/sistema/" + QString::fromStdString(paths[i]);
         urls.push_back(url);
         urls_.push_back(false);
     }
 
-    /*for(size_t i = 0; i < paths.size(); i++){
-        //qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(names[i]);
+    for(size_t i = 0; i < paths.size(); i++){
+        qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(names[i]);
         qDebug() << "names: " << QString::fromStdString(names[i]) << " label: " << labels[i];
-    }*/
+    }
+
     faces.clear();
 
     for(size_t i = 0; i < paths.size(); i++){
@@ -252,6 +255,61 @@ void MainWindow::on_actionCarregar_triggered(){
 
     qDebug() <<  "faces.size(): " << faces.size();
 
+}
+
+/**
+ * @brief MainWindow::on_actionCarregar_local_triggered()
+ * Carrega imagens dos usuarios cadastrados no banco de dados
+ */
+void MainWindow::on_actionCarregar_local_triggered()
+{
+    //databaseInputs(&host, &banco, &login, &senha);
+    database db("127.0.0.1", "u3209476_db", "root", "usbw");
+
+    if(!db.isConnected()) return;
+
+    paths.clear(); names.clear(); labels.clear();
+
+    db.retrieveFaces(&this->paths, &this->names, &this->labels);
+
+    for(size_t i = 0; i < paths.size(); i++){
+        QString url;
+        url = "C:/Users/guilhermo/Desktop/USBWebserver v8.6/root/Projeto/projeto/sistema/" + QString::fromStdString(paths[i]);
+        urls.push_back(url);
+        urls_.push_back(false);
+    }
+
+    for(size_t i = 0; i < paths.size(); i++){
+        qDebug() << "path: " << QString::fromStdString(paths[i]) << " label: " << QString::fromStdString(names[i]);
+        qDebug() << "names: " << QString::fromStdString(names[i]) << " label: " << labels[i];
+    }
+
+    faces.clear();
+
+    for(size_t i = 0; i < paths.size(); i++){
+        qDebug() << "path: " << QString::fromStdString(paths[i]) << " " << i;
+        cv::Mat mat = cv::imread(urls[i].toStdString());
+        if(mat.empty()){ qDebug() << "empty"; return;}
+        faces.push_back(mat);
+    }
+
+    qDebug() <<  "faces.size(): " << faces.size();
+}
+
+/**
+ * @brief MainWindow::loadImage
+ * Carrega imagens e as converte para cv::Mat
+ */
+void MainWindow::loadImage(){
+    //qDebug() << "loadImage()";
+    QImage image;
+    cv::Mat mat;
+    image.loadFromData(m_pImgCtrl->downloadedData());
+    if(image.isNull()){qDebug() << "null"; return;}
+    mat = cvtQImage2CvMat(image);
+    if(mat.empty()){qDebug() << "empty"; return;}
+    faces.push_back(mat);
+    qDebug() <<  "faces.size(): " << faces.size();
 }
 
 /**
@@ -265,32 +323,15 @@ void MainWindow::on_actionSobre_triggered(){
 }
 
 /**
- * @brief MainWindow::loadImage
- * Carrega imagens e as converte para cv::Mat
- */
-void MainWindow::loadImage(){
-    //qDebug() << "loadImage()";
-    QImage image;
-    cv::Mat mat;
-    image.loadFromData(m_pImgCtrl->downloadedData());
-    qDebug() << image.isNull();
-    mat = cvtQImage2CvMat(image);
-    if(mat.empty()){ qDebug() << "empty"; return;}
-    faces.push_back(mat);
-    /*ui->imagem->setPixmap(QPixmap::fromImage(cvtCvMat2QImage(mat)));
-    ui->imagem->show();*/
-    qDebug() <<  "faces.size(): " << faces.size();
-}
-
-/**
  * @brief MainWindow::on_actionTestar_imagens_triggered
  * Mostra imagens carregadas
  */
 void MainWindow::on_actionTestar_imagens_triggered(){
+    cv::namedWindow("teste");
     for(size_t i = 0; i < faces.size(); i++){
         qDebug() << "testando mat " << i;
         cv::imshow("teste", faces[i]);
-        cv::waitKey(500);
+        cv::waitKey(2000);
     }
 }
 
@@ -342,3 +383,4 @@ void MainWindow::escreveConfianca(double confianca)
 {
     ui->doubleSpinBox_2->setValue(confianca);
 }
+

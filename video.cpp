@@ -4,8 +4,8 @@
 #define _CAP_WIDTH 640
 #define _CAP_HEIGHT 480
 #define _FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml"
-#define _PROFILE_FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_profile_face.xml"
-#define _EYE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades/haarcascade_mcs_nose.xml"
+#define _PROFILE_FACE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades//haarcascade_profile_face.xml"
+#define _EYE_CASCADE_PATH "C:/OpenCV/opencv/sources/data/haarcascades//haarcascade_mcs_nose.xml"
 #define _COR_POSITIVO CV_RGB(0, 255,0)
 #define _COR_NEGATIVO CV_RGB(255, 0,0)
 #define _FACE_RADIUS_RATIO 0.75
@@ -48,12 +48,14 @@ void Video::run(){
     recognizer1->set("threshold", threshold);
 
     while(cap.read(frame)){
+        //qDebug() << frame.cols << frame.rows;
         if(frame_count == 12){
             detector->findFacesInImage(frame, faces);
             if(faces.empty()){
                 isFaceOn = false;
                 faceReconhecida = false;
                 avisou = false;
+                enviou = false;
                 //qDebug("face off");
             } else {
                 isFaceOn = true;
@@ -70,25 +72,27 @@ void Video::run(){
             //qDebug() << "reconhecendo";
             cv::Mat gray;
             cv::cvtColor(frame(faces[0]), gray, CV_BGR2GRAY);
-            cv::resize(gray, gray, cv::Size(200,200));
+            cv::resize(gray, gray, cv::Size(140,140));
             //cv::normalize(frame(faces[0]), gray, 0, 255, cv::NORM_MINMAX, CV_8UC1);
             //cv::imshow("teste", gray);
             //cv::waitKey(50);
             //prediction = recognizer->predict(gray);
             recognizer->predict(gray, label, con);
-            recognizer1->predict(gray, label1, con1);
-            qDebug() << con << con1 << label << label1;
-            double ratio = con/con1;
-            if(con == 0 || con1 == 0) ratio = 1;
-            if(con > 1000 || con1 > 1000) ratio = -1;
-            emit emiteConfianca(ratio);
+            //recognizer1->predict(gray, label1, con1);
+            //qDebug() << con << con1 << label << label1;
+            //double ratio = con/con1;
+            double ratio = con/con;
+            //if(con == 0 || con1 == 0) ratio = 1;
+            //if(con > 1000 || con1 > 1000) ratio = -1;
+            if(con == 0) ratio = 1;
+            if(con > 1000) ratio = -1;
+            emit emiteConfianca(con);
             if(ratio < 2 && ratio > 0.5){
-            //if(con < threshold){
                 //qDebug() << "reconheceu";
                 faceReconhecida = true;
                 cor = _COR_POSITIVO;
-                //box_text = recognizer->getLabelInfo(label);
-                //qDebug() << QString::fromStdString(box_text);
+                box_text = recognizer->getLabelInfo(label);
+                qDebug() << QString::fromStdString(box_text);
                 atirou = false;
             } else{
                 //qDebug() << "nao reconheceu";
@@ -97,8 +101,19 @@ void Video::run(){
                 box_text = "Desconhecido";
                 if(!avisou) emit emiteSom();
                 avisou = true;
+                atirou = false;
             //}
             }
+            /*if(!enviou){
+                QImage imagem = cvtCvMat2QImage(frame);
+                QByteArray ba;
+                QBuffer buffer(&ba);
+                buffer.open(QIODevice::WriteOnly);
+                imagem.save(&buffer, "PNG");
+                qDebug() << "chamando envia imagem";
+                enviaImagem(ba, label);
+                enviou = true;
+            }*/
         }
 
         if(isFaceOn){
@@ -106,11 +121,16 @@ void Video::run(){
             cv::rectangle(frame, faces[0], cor);
             //int pos_x = std::max(faces[0].tl().x - 10, 0);
             //int pos_y = std::max(faces[0].tl().y - 10, 0);
-            //cv::putText(frame, box_text, cv::Point(pos_x, pos_y), cv::FONT_HERSHEY_DUPLEX, 0.5, cor, 1.0);
-             //}
+            int pos_x = (((faces[0].tl().x - 10) > (0)) ? (faces[0].tl().x - 10) : (0));
+            int pos_y = (((faces[0].tl().y - 10) > (0)) ? (faces[0].tl().y - 10) : (0));
+            cv::putText(frame, box_text, cv::Point(pos_x, pos_y), cv::FONT_HERSHEY_DUPLEX, 0.5, cor, 1.0);
+            //}
         }
 
         if(!faceReconhecida && !atirou){
+
+            achaLaser(&frame);
+            qDebug() << "ajustando mira";
             ajustaMira(faces[0]);
         }
 
@@ -169,7 +189,8 @@ void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std:
         qDebug() << "achou";
         qDebug() << faces.size();
         cv::Mat mat = src[i](faces[0]);
-        cv::resize(mat, mat, cv::Size(200,200));
+        qDebug() << mat.cols << mat.rows;
+        cv::resize(mat, mat, cv::Size(140,140));
         cv::cvtColor(mat, mat, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(mat, mat);
         temp.push_back(mat);
@@ -185,7 +206,7 @@ void Video::train(std::vector<cv::Mat> src, std::vector<std::string> names, std:
         }
         qDebug() << i << labels[i] << QString::fromStdString(infoLabels[labels[i]]);
     }
-    //recognizer->setLabelsInfo(infoLabels);
+    recognizer->setLabelsInfo(infoLabels);
 
     for (std::map<int, std::string>::iterator it=infoLabels.begin(); it!=infoLabels.end(); ++it)
         qDebug() << it->first << " => " << QString::fromStdString(it->second);
@@ -288,6 +309,7 @@ void Video::achaLaser(cv::Mat *frame){
     cv::split(*frame, channels); // canais na ordem BGR
 
     cv::minMaxLoc(channels[1], &minVal, &maxVal, &minPos, &laserPos, cv::noArray());
+    cv::circle(*frame, laserPos, 3, cv::Scalar(0,140,255), -1, 8, 0 );
     //qDebug() << "minVal = " << minVal << "maxVal = " << maxVal << "minLoc = " << minLoc.x << minLoc.y << "maxLoc = " << maxLoc.x << maxLoc.y;
 }
 
@@ -296,27 +318,29 @@ void Video::achaLaser(cv::Mat *frame){
  * Ajusta a mira da sentry e atira, enviando informações para o Arduino
  */
 void Video::ajustaMira(cv::Rect facePos){
-    if(!serial.isOpen()) return;
+    //if(!serial.isOpen()) return;
 
-    int faceMin = facePos.x - 20; // menor ponto para atirar com um valor de ajuste
-    int faceMax = facePos.x + facePos.width + 20; // maior ponto para atirar com um valor de ajuste
+    int faceMin = facePos.x + 10; // menor ponto para atirar com um valor de ajuste
+    int faceMax = facePos.x + facePos.width - 10; // maior ponto para atirar com um valor de ajuste
 
-    if(laserPos.x > faceMax){
-        char *data = (char *)'d';
-        serial.write(data);
-        qDebug() << "Girando motor para direita";
-        //QThread::msleep(500);
-    } else if(laserPos.x < faceMin ){
-        char *data = (char *)'l';
-        serial.write(data);
-        qDebug() << "Girando motor para esquerda";
-        //QThread::msleep(500);
-    } else{
+    qDebug() << laserPos.x << faceMax << faceMin;
+
+    if(laserPos.x > faceMin && laserPos.x < faceMax){
         qDebug() << "Atirou!";
         char *data = (char *)'a';
-        serial.write(data);
+        //serial.write(data);
         //QThread::msleep(500);
         atirou = true;
+    } else if(laserPos.x < faceMax){
+        char *data = (char *)'d';
+        //serial.write(data);
+        qDebug() << "Girando motor para direita";
+        //QThread::msleep(500);
+    } else{
+        char *data = (char *)'l';
+        //serial.write(data);
+        qDebug() << "Girando motor para esquerda";
+        //QThread::msleep(500);
     }
 }
 
@@ -352,4 +376,20 @@ void Video::setThreshold(double threshold){
     recognizer->set("threshold", threshold);
     recognizer1->set("threshold", threshold);
     this->threshold = threshold;
+}
+
+void Video::enviaImagem(QByteArray imagem, int id)
+{
+    qDebug() << "envia imagem";
+    QNetworkAccessManager *manager = new QNetworkAccessManager();
+    connect(manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(replyFinished(QNetworkReply*)));
+    QString url = "http://guilhermo.com.br/projeto/sistema/recebeimagem.php?id=" + id;
+    qDebug() << "postando";
+    manager->post(QNetworkRequest(QUrl(url)), imagem);
+}
+
+void Video::replyFinished(QNetworkReply*)
+{
+
 }

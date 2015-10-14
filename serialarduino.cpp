@@ -134,7 +134,6 @@ bool SerialArduino::WriteData(char *buffer, unsigned int nbChar){
     {
         //In case it don't work get comm error and return false
         ClearCommError(this->hSerial, &this->errors, &this->status);
-
         return false;
     }
     else
