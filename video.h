@@ -10,7 +10,7 @@
 #include <QSound>
 #include "qtopencv.h"
 #include "facedetector.h"
-#include "serialport.h"
+#include "serialarduino.h"
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/contrib/contrib.hpp"
@@ -23,6 +23,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QBuffer>
+#include <QInputDialog>
 
 
 class Video : public QThread
@@ -68,8 +69,7 @@ private slots:
 private:
     cv::VideoCapture cap;
     FaceDetector* detector;
-    SerialPort serial;
-    //Recognizer* recognizer;
+    SerialArduino* serial;
     cv::Ptr<cv::FaceRecognizer> recognizer;
     cv::Ptr<cv::FaceRecognizer> recognizer1;
     cv::Rect face_point;

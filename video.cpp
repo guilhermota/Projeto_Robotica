@@ -27,6 +27,8 @@
     recognizer = cv::createLBPHFaceRecognizer();
     recognizer1 = cv::createEigenFaceRecognizer();
 
+    abreSerial();
+
     connect(this, SIGNAL(emiteSom()), this, SLOT(tocaSom()));
 }
 
@@ -318,7 +320,7 @@ void Video::achaLaser(cv::Mat *frame){
  * Ajusta a mira da sentry e atira, enviando informações para o Arduino
  */
 void Video::ajustaMira(cv::Rect facePos){
-    //if(!serial.isOpen()) return;
+    if(!serial->IsConnected()) return;
 
     int faceMin = facePos.x + 10; // menor ponto para atirar com um valor de ajuste
     int faceMax = facePos.x + facePos.width - 10; // maior ponto para atirar com um valor de ajuste
@@ -328,17 +330,17 @@ void Video::ajustaMira(cv::Rect facePos){
     if(laserPos.x > faceMin && laserPos.x < faceMax){
         qDebug() << "Atirou!";
         char *data = (char *)'a';
-        //serial.write(data);
+        serial->WriteData(data, 32);
         //QThread::msleep(500);
         atirou = true;
     } else if(laserPos.x < faceMax){
         char *data = (char *)'d';
-        //serial.write(data);
+        serial->WriteData(data, 32);
         qDebug() << "Girando motor para direita";
         //QThread::msleep(500);
     } else{
         char *data = (char *)'l';
-        //serial.write(data);
+        serial->WriteData(data, 32);
         qDebug() << "Girando motor para esquerda";
         //QThread::msleep(500);
     }
@@ -349,7 +351,18 @@ void Video::ajustaMira(cv::Rect facePos){
  * Abre porta USB
  */
 void Video::abreSerial(){
-    serial.exec();
+    bool ok;
+    QString text = QInputDialog::getText(NULL, tr("Conexao Arduino"),
+                                            tr("Nome Porta:"), QLineEdit::Normal,
+                                            "COM7", &ok);
+
+    if(ok)  serial = new SerialArduino((char*)text.toStdString().c_str());
+    if(!serial->IsConnected()){
+        QMessageBox msgBox;
+        msgBox.setText("A conexao nao pode ser aberta!");
+        msgBox.exec();
+    }
+
 }
 
 /**
@@ -357,7 +370,7 @@ void Video::abreSerial(){
  * Fecha porta USB
  */
 void Video::fechaSerial(){
-    serial.fechaConexao();
+
 }
 
 /**

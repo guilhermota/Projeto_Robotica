@@ -97,41 +97,9 @@ void MainWindow::on_actionAbrir_Camera_triggered(){
  */
 void MainWindow::on_actionListar_Portas_triggered(){
     qDebug("Abrindo Dialog Listar Portas");
-    //serial.exec();
-    video->abreSerial();
     QMessageBox::information(this, "Conexao Aberta", "Conexao Aberta.");
 }
 
-/**
- * @brief MainWindow::on_actionTestar_Conexao_triggered
- * Testa conexão USB
- */
-void MainWindow::on_actionTestar_Conexao_triggered(){
-    /*if(serial.isOpen()){
-       char dados = 9;
-
-       qDebug("enviando sinal serial");
-       qDebug() << serial.write(&dados, 8);
-
-       //serial.write(&dados, 512);
-
-       QThread::msleep(1000);
-      } else {
-        QMessageBox::warning(this, "Erro!", "Nao ha nenhuma porta aberta!");
-    }*/
-}
-
-/**
- * @brief MainWindow::on_actionFechar_Conexao_triggered
- * Fecha conexão USB.
- */
-void MainWindow::on_actionFechar_Conexao_triggered(){
-    qDebug("Fechando Conexão Serial");
-    //serial.fechaConexao();
-    //QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
-    video->fechaSerial();
-    QMessageBox::information(this, "Conexao Fechada", "Conexao Fechada.");
-}
 
 /**
  * @brief MainWindow::on_actionFechar_Camera_triggered

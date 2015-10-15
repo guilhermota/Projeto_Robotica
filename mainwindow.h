@@ -73,10 +73,6 @@ private slots:
 
     void on_actionCarregar_local_triggered();
 
-    void on_actionTestar_Conexao_triggered();
-
-    void on_actionFechar_Conexao_triggered();
-
 private:
     Ui::MainWindow *ui;
     SerialPort serial;
