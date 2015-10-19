@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Projeto</string>
   </property>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
@@ -114,7 +114,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Arthur</string>
+    <string>Arthur Bisneto</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -146,9 +146,9 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>30</y>
-     <width>101</width>
+     <width>151</width>
      <height>191</height>
     </rect>
    </property>
@@ -156,7 +156,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="resources.qrc">:/rsc/oila.jpg</pixmap>
+    <pixmap resource="resources.qrc">:/rsc/logo_provisoria.jpg</pixmap>
    </property>
   </widget>
   <widget class="QLabel" name="label_12">

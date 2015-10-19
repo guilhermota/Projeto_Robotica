@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/rsc">
-        <file alias="logo_provisoria">logo_provisoria.jpg</file>
         <file alias="lbp_frontal_face">rsc/lbpcascades/lbpcascade_frontalface.xml</file>
         <file alias="lbp_profile_face">rsc/lbpcascades/lbpcascade_profileface.xml</file>
         <file alias="haar_eye">rsc/haarcascades/haarcascade_eye.xml</file>
@@ -8,5 +7,6 @@
         <file alias="haar_frontal_face">rsc/haarcascades/haarcascade_frontalface_alt.xml</file>
         <file>oila.jpg</file>
         <file>aviso.wav</file>
+        <file>logo_provisoria.jpg</file>
     </qresource>
 </RCC>

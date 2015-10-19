@@ -97,7 +97,8 @@ void MainWindow::on_actionAbrir_Camera_triggered(){
  */
 void MainWindow::on_actionListar_Portas_triggered(){
     qDebug("Abrindo Dialog Listar Portas");
-    QMessageBox::information(this, "Conexao Aberta", "Conexao Aberta.");
+    serial.exec();
+   // QMessageBox::information(this, "Conexao Aberta", "Conexao Aberta.");
 }
 
 
